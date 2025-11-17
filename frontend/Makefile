@@ -1,5 +1,5 @@
 build:
-	npm build
+	npm run build
 start:
 	npm start
 install:
