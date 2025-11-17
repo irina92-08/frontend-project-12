@@ -1,7 +1,6 @@
 build:
-	rm -rf frontend/dist
-	npm run build
+	npm build
 start:
-	npx start-server -s .dist
+	npm start
 install:
 	npm ci
