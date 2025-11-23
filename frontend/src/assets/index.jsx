@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { FormComponent } from "../Components/Loging";
-import { MainPage } from "../Components/MainPage";
-import { NotFound } from "../Components/NotFound";
+import { FormComponent } from "../components/Loging";
+import { MainPage } from "../components/MainPage";
+import { NotFound } from "../components/NotFound";
 
 const App = () => {
   return (
