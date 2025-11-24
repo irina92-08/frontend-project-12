@@ -6,6 +6,7 @@ import cn from "classnames";
 
 export const FormComponent = () => {
   const navigate = useNavigate();
+
   return (
     <div className="container-fluid h-100">
       <div className="row justify-content-center align-content-center h-100">
@@ -22,7 +23,7 @@ export const FormComponent = () => {
                     initialValues={{ username: "", password: "", error: false }}
                     onSubmit={async (
                       values,
-                      { setSubmitting, setFieldValue },
+                      { setSubmitting, setFieldValue, resetForm },
                     ) => {
                       setFieldValue("error", false);
                       await axios
@@ -36,6 +37,7 @@ export const FormComponent = () => {
                             localStorage.setItem("token", token);
                             navigate("/");
                             setSubmitting(false);
+                            resetForm();
                           }
                         })
                         .catch((error) => {
@@ -49,11 +51,10 @@ export const FormComponent = () => {
                     }}
                   >
                     {({ isSubmitting, values }) => (
-                      <Form>
+                      <Form autoComplete="off">
                         <div className="form-floating mb-3">
                           <Field
                             name="username"
-                            autoComplete="username"
                             required=""
                             placeholder="Ваш ник"
                             id="username"
@@ -66,7 +67,6 @@ export const FormComponent = () => {
                         <div className="form-floating mb-4">
                           <Field
                             name="password"
-                            autoComplete="current-password"
                             required=""
                             placeholder="Пароль"
                             type="password"
