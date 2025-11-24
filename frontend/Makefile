@@ -1,7 +1,7 @@
 build:
 	npm run build
 start:
-	npm start
+	npm run build && npm start
 install:
 	npm ci
 lint:

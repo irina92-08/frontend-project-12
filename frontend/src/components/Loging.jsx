@@ -1,7 +1,11 @@
-import { Formik } from "formik";
+import { Formik, Form, Field } from "formik";
 import logingImg from "../assets/images/loging.jpg";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import cn from "classnames";
 
 export const FormComponent = () => {
+  const navigate = useNavigate();
   return (
     <div className="container-fluid h-100">
       <div className="row justify-content-center align-content-center h-100">
@@ -15,53 +19,79 @@ export const FormComponent = () => {
                 <div className="col-12">
                   <h1 className="text-center mb-4">Войти</h1>
                   <Formik
-                    initialValues={{ name: "", password: "" }}
-                    onSubmit={(values) => {
-                      console.log(values);
+                    initialValues={{ username: "", password: "", error: false }}
+                    onSubmit={async (
+                      values,
+                      { setSubmitting, setFieldValue },
+                    ) => {
+                      setFieldValue("error", false);
+                      await axios
+                        .post("api/v1/login", values)
+                        .then((response) => {
+                          const { token } = response.data;
+                          if (!token) {
+                            navigate("/login");
+                            setSubmitting(false);
+                          } else {
+                            localStorage.setItem("token", token);
+                            navigate("/");
+                            setSubmitting(false);
+                          }
+                        })
+                        .catch((error) => {
+                          console.log(error);
+                          console.log(error.response?.status);
+
+                          if (error.response?.status === 401) {
+                            setFieldValue("error", true);
+                          }
+                        });
                     }}
                   >
-                    {(
-                      values,
-                      // handleChange,
-                      //isSubmitting,
-                    ) => (
-                      <form>
+                    {({ isSubmitting, values }) => (
+                      <Form>
                         <div className="form-floating mb-3">
-                          <label htmlFor="username">Ваш ник</label>
-                          <input
+                          <Field
                             name="username"
                             autoComplete="username"
                             required=""
                             placeholder="Ваш ник"
                             id="username"
-                            className="form-control"
-                            value={values.name}
-                            // onChange={handleChange}
+                            className={cn("form-control", {
+                              "is-invalid": values.error,
+                            })}
                           />
+                          <label htmlFor="username">Ваш ник</label>
                         </div>
                         <div className="form-floating mb-4">
-                          <label className="form-label" htmlFor="password">
-                            Пароль
-                          </label>
-                          <input
+                          <Field
                             name="password"
                             autoComplete="current-password"
                             required=""
                             placeholder="Пароль"
                             type="password"
                             id="password"
-                            className="form-control"
-                            value={values.password}
-                            //onChange={handleChange}
+                            className={cn("form-control", {
+                              "is-invalid": values.error,
+                            })}
                           />
+                          <label className="form-label" htmlFor="password">
+                            Пароль
+                          </label>
+                          {values.error && (
+                            <div className="invalid-feedback">
+                              Неверные имя пользователя или пароль
+                            </div>
+                          )}
                         </div>
                         <button
                           type="submit"
                           className="w-100 mb-3 btn btn-outline-primary"
+                          disabled={isSubmitting}
                         >
                           Войти
                         </button>
-                      </form>
+                      </Form>
                     )}
                   </Formik>
                 </div>
