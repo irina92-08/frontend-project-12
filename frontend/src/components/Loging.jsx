@@ -3,9 +3,12 @@ import logingImg from "../assets/images/loging.jpg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import cn from "classnames";
+import { useDispatch } from "react-redux";
+import { actions as currentChatActions } from "../assets/slices/currentValueChatSlice";
 
 export const FormComponent = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
     <div className="d-flex flex-column h-100">
@@ -41,12 +44,15 @@ export const FormComponent = () => {
                         await axios
                           .post("api/v1/login", values)
                           .then((response) => {
-                            const { token } = response.data;
+                            const { token, username } = response.data;
                             if (!token) {
                               navigate("/login");
                               setSubmitting(false);
                             } else {
                               localStorage.setItem("token", token);
+                              dispatch(
+                                currentChatActions.setCurrentUserName(username),
+                              );
                               navigate("/");
                               setSubmitting(false);
                               resetForm();

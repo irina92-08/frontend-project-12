@@ -1,19 +1,20 @@
 import axios from "axios";
 import { actions as channelsActions } from "../assets/slices/channelsSlice";
 import { actions as messagesActions } from "../assets/slices/messagesSlice";
+import cn from "classnames";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 
-//const Messages = ({ data }) => {};
-
-const Channels = ({ data }) => {
+const Channels = ({ data, currentChannel }) => {
   const channelList = data.map((channel) => (
     <li key={channel.id} className="nav-item w-100" id={channel.id}>
       <button
         //btn-secondary для клика и перехода по каналам
         type="button"
-        className="w-100 rounded-0 text-start btn"
+        className={cn("w-100 rounded-0 text-start btn", {
+          "btn-secondary": channel.id === currentChannel,
+        })}
       >
         <span className="me-1">#</span>
         {channel.name}
@@ -31,14 +32,19 @@ const Channels = ({ data }) => {
   );
 };
 
-const ByDefaultMessages = ({ channelName }) => {
+const Messages = ({ data, idChannel }) => {
+  const currentDataChannel = data.filter((i) => i.channelId === idChannel);
+  const messagesList = currentDataChannel.map((massege) => {
+    return (
+      <div className="text-break mb-2" key={massege.id}>
+        <b>{massege.username}</b>:{massege.body}
+      </div>
+    );
+  });
   return (
-    <>
-      <p className="m-0">
-        <b># {channelName} </b>
-      </p>
-      <span className="text-muted">0 сообщений</span>
-    </>
+    <div id="messages-box" className="chat-messages overflow-auto px-5 ">
+      {messagesList}
+    </div>
   );
 };
 
@@ -63,7 +69,37 @@ export const MainPage = () => {
   }, [dispatch]);
   const dataChannels = useSelector((state) => state.channelsReducer);
   const dataMessages = useSelector((state) => state.messagesReducer);
-  console.log(dataChannels);
+
+  const idChannel = useSelector((state) => state.currentChatReduser.idChannel);
+  const nameChannel = useSelector(
+    (state) => state.currentChatReduser.nameChannel,
+  );
+  const currentDataMessages = dataMessages.messages.filter(
+    (message) => message.channelId === idChannel,
+  ).length;
+
+  const nameUser = useSelector((state) => state.currentChatReduser.userName);
+
+  const handleSubmitMessage = (e) => {
+    e.preventDefault();
+
+    const text = e.target.elements.body.value;
+    e.target.elements.body.value = "";
+
+    const newMessage = { body: text, channelId: idChannel, username: nameUser };
+    const token = localStorage.getItem("token");
+
+    axios
+      .post("/api/v1/messages", newMessage, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data); // => { id: '1', body: 'new message', channelId: '1', username: 'admin }
+        dispatch(messagesActions.addMessage(response.data));
+      });
+  };
 
   return (
     <>
@@ -101,35 +137,40 @@ export const MainPage = () => {
                   <span className="visually-hidden">+</span>
                 </button>
               </div>
-              <Channels data={dataChannels.channels} />
+              <Channels
+                data={dataChannels.channels}
+                currentChannel={idChannel}
+              />
             </div>
             <div className="col p-0 h-100">
               <div className="d-flex flex-column h-100">
                 <div className="bg-light mb-4 p-3 shadow-sm small">
-                  {dataMessages.messages?.length === 0 &&
-                    dataChannels.channels?.length > 0 && (
-                      <ByDefaultMessages
-                        channelName={dataChannels.channels[0].name}
-                      />
-                    )}
+                  <p className="m-0">
+                    <b># {nameChannel} </b>
+                  </p>
+                  <span className="text-muted">
+                    {currentDataMessages} сообщений
+                  </span>
                 </div>
-                <div
-                  id="messages-box"
-                  className="chat-messages overflow-auto px-5 "
-                ></div>
+
+                <Messages data={dataMessages.messages} idChannel={idChannel} />
+
                 <div className="mt-auto px-5 py-3">
-                  <form className="py-1 border rounded-2">
+                  <form
+                    className="py-1 border rounded-2"
+                    onSubmit={handleSubmitMessage}
+                  >
                     <div className="input-group has-validation">
                       <input
                         name="body"
                         aria-label="Новое сообщение"
                         placeholder="Введите сообщение..."
                         className="border-0 p-0 ps-2 form-control"
-                        value=""
+                        //value=""
                       />
                       <button
                         type="submit"
-                        disabled=""
+                        //disabled=""
                         className="btn btn-group-vertical"
                       >
                         <svg
