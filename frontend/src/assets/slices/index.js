@@ -1,14 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import channelsReducer from "./channelsSlice";
 import messagesReducer from "./messagesSlice";
-import currentChatReduser from "./currentValueChatSlice";
+import currentChatReduсer from "./currentValueChatSlice";
 import { socketMiddleware } from "../middleware/socketMiddleware";
+import modalReducer from "./modalSlice";
 
 export default configureStore({
   reducer: {
     channelsReducer,
     messagesReducer,
-    currentChatReduser,
+    currentChatReduсer,
+    modalReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(socketMiddleware),

@@ -17,6 +17,10 @@ const currentChatSlice = createSlice({
     setCurrentUserName(state, { payload }) {
       state.userName = payload;
     },
+    changeCurrentChannel(state, { payload }) {
+      state.nameChannel = payload.name;
+      state.idChannel = payload.id;
+    },
   },
 });
 

@@ -1,7 +1,8 @@
 import axios from "axios";
 import { actions as channelsActions } from "../assets/slices/channelsSlice";
 import { actions as messagesActions } from "../assets/slices/messagesSlice";
-
+import { actions as modalActions } from "../assets/slices/modalSlice";
+import { Modal } from "./Modal";
 import cn from "classnames";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -71,25 +72,25 @@ export const MainPage = () => {
   }, [dispatch]);
   const dataChannels = useSelector((state) => state.channelsReducer);
   const dataMessages = useSelector((state) => state.messagesReducer);
+  const modalOpen = useSelector((state) => state.modalReducer.activeModal);
 
-  const idChannel = useSelector((state) => state.currentChatReduser.idChannel);
+  const idChannel = useSelector((state) => state.currentChatReduсer.idChannel);
   const nameChannel = useSelector(
-    (state) => state.currentChatReduser.nameChannel,
+    (state) => state.currentChatReduсer.nameChannel,
   );
 
   const currentDataMessages = dataMessages.messages.filter(
     (message) => message.channelId === idChannel,
   );
 
-  const nameUser = useSelector((state) => state.currentChatReduser.userName);
+  const nameUser = useSelector((state) => state.currentChatReduсer.userName);
 
   const handleSubmitMessage = (e) => {
-
     e.preventDefault();
 
     const text = e.target.elements.body.value;
     e.target.elements.body.value = "";
-    console.log(e)
+    console.log(e);
 
     const newMessage = { body: text, channelId: idChannel, username: nameUser };
     const token = localStorage.getItem("token");
@@ -99,6 +100,10 @@ export const MainPage = () => {
         Authorization: `Bearer ${token}`,
       },
     });
+  };
+
+  const handleChannel = () => {
+    dispatch(modalActions.changesModal(true));
   };
 
   return (
@@ -122,6 +127,7 @@ export const MainPage = () => {
                 <button
                   type="button"
                   className="p-0 text-primary btn btn-group-vertical"
+                  onClick={handleChannel}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -194,6 +200,7 @@ export const MainPage = () => {
         </div>
       </div>
       <div className="Toastify"></div>
+      {modalOpen && <Modal />}
     </>
   );
 };
