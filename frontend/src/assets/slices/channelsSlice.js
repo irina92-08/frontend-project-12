@@ -11,6 +11,15 @@ const channelsSlice = createSlice({
     setChannels(state, { payload }) {
       state.channels = payload;
     },
+    addChannel(state, { payload }) {
+      state.channels = [...state.channels, payload];
+    },
+    removeChannel(state, { payload }) {
+      console.log(state, payload);
+    },
+    renameChannel(state, { payload }) {
+      console.log(state, payload);
+    },
   },
 });
 

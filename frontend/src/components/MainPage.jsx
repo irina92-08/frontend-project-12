@@ -1,6 +1,7 @@
 import axios from "axios";
 import { actions as channelsActions } from "../assets/slices/channelsSlice";
 import { actions as messagesActions } from "../assets/slices/messagesSlice";
+
 import cn from "classnames";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -32,9 +33,10 @@ const Channels = ({ data, currentChannel }) => {
   );
 };
 
-const Messages = ({ data, idChannel }) => {
-  const currentDataChannel = data.filter((i) => i.channelId === idChannel);
-  const messagesList = currentDataChannel.map((massege) => {
+const Messages = ({ data }) => {
+  console.log(data);
+
+  const messagesList = data.map((massege) => {
     return (
       <div className="text-break mb-2" key={massege.id}>
         <b>{massege.username}</b>:{massege.body}
@@ -60,7 +62,7 @@ export const MainPage = () => {
         axios.get("/api/v1/channels", { headers }),
         axios.get("/api/v1/messages", { headers }),
       ]);
-
+      console.log("messagesResponse.data", messagesResponse.data);
       dispatch(channelsActions.setChannels(channelsResponse.data));
       dispatch(messagesActions.setMessages(messagesResponse.data));
     };
@@ -74,31 +76,29 @@ export const MainPage = () => {
   const nameChannel = useSelector(
     (state) => state.currentChatReduser.nameChannel,
   );
+
   const currentDataMessages = dataMessages.messages.filter(
     (message) => message.channelId === idChannel,
-  ).length;
+  );
 
   const nameUser = useSelector((state) => state.currentChatReduser.userName);
 
   const handleSubmitMessage = (e) => {
+
     e.preventDefault();
 
     const text = e.target.elements.body.value;
     e.target.elements.body.value = "";
+    console.log(e)
 
     const newMessage = { body: text, channelId: idChannel, username: nameUser };
     const token = localStorage.getItem("token");
 
-    axios
-      .post("/api/v1/messages", newMessage, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log(response.data); // => { id: '1', body: 'new message', channelId: '1', username: 'admin }
-        dispatch(messagesActions.addMessage(response.data));
-      });
+    axios.post("/api/v1/messages", newMessage, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   };
 
   return (
@@ -149,11 +149,11 @@ export const MainPage = () => {
                     <b># {nameChannel} </b>
                   </p>
                   <span className="text-muted">
-                    {currentDataMessages} сообщений
+                    {currentDataMessages.length} сообщений
                   </span>
                 </div>
 
-                <Messages data={dataMessages.messages} idChannel={idChannel} />
+                <Messages data={currentDataMessages} />
 
                 <div className="mt-auto px-5 py-3">
                   <form

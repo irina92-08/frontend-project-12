@@ -4,6 +4,7 @@ const initialState = {
   idChannel: "1",
   nameChannel: "general",
   userName: "",
+  sendMessage: false,
 };
 
 const currentChatSlice = createSlice({
