@@ -9,6 +9,10 @@ import cn from "classnames";
 
 export const Modal = () => {
   const dispatch = useDispatch();
+  const modal = useSelector((state) => state.modalReducer);
+
+  const { initialValue, rename, channelId } = modal;
+  const modalTitle = rename ? "Переименовать канал" : "Добавить канал";
   const dataChannels = useSelector((state) => state.channelsReducer);
 
   const schema = yup.object().shape({
@@ -34,19 +38,20 @@ export const Modal = () => {
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
-            <div className="modal-title h4">Добавить канал</div>
+            <div className="modal-title h4">{modalTitle}</div>
             <button
               type="button"
               aria-label="Close"
               data-bs-dismiss="modal"
               className="btn btn-close"
-              onClick={() => dispatch(modalActions.changesModal(false))}
+              onClick={() => dispatch(modalActions.closeModal())}
             ></button>
           </div>
           <div className="modal-body">
             <Formik
+              enableReinitialize={true}
               initialValues={{
-                name: "",
+                name: initialValue || "",
                 error: false,
               }}
               validateOnChange={true}
@@ -58,14 +63,19 @@ export const Modal = () => {
               ) => {
                 setFieldValue("error", false);
                 const token = localStorage.getItem("token");
-                await axios
-                  .post("/api/v1/channels", values, {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
-                  })
+                const url = rename
+                  ? `/api/v1/channels/${channelId}`
+                  : "/api/v1/channels";
+                const method = rename ? "patch" : "post";
+
+                await axios({
+                  method,
+                  url,
+                  data: { name: values.name },
+                  headers: { Authorization: `Bearer ${token}` },
+                })
                   .then((response) => {
-                    //const { id, name } = response.data;
+                    dispatch(modalActions.closeModal());
                     dispatch(
                       currentChatActions.changeCurrentChannel(response.data),
                     );
@@ -89,6 +99,7 @@ export const Modal = () => {
                       className={cn("form-control mb-2", {
                         "is-invalid": errors.name,
                       })}
+                      autoFocus
                     />
                     <label htmlFor="name" className="visually-hidden">
                       Имя канала
@@ -105,7 +116,7 @@ export const Modal = () => {
                       type="button"
                       className="me-2 btn btn-secondary"
                       disabled={isSubmitting}
-                      onClick={() => dispatch(modalActions.changesModal(false))}
+                      onClick={() => dispatch(modalActions.closeModal())}
                     >
                       Отменить
                     </button>
@@ -114,7 +125,7 @@ export const Modal = () => {
                       className="btn btn-primary"
                       disabled={isSubmitting}
                     >
-                      Отправить
+                      {rename ? "Переименовать" : "Отправить"}
                     </button>
                   </div>
                 </Form>

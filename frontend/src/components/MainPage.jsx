@@ -11,21 +11,80 @@ import { useEffect } from "react";
 
 const Channels = ({ data, currentChannel }) => {
   const dispatch = useDispatch();
+
+  const handleRenameClick = (channel) => {
+    dispatch(modalActions.openRenameModal(channel));
+  };
+
   const channelList = data.map((channel) => (
     <li key={channel.id} className="nav-item w-100" id={channel.id}>
-      <button
-        //btn-secondary для клика и перехода по каналам
-        type="button"
-        className={cn("w-100 rounded-0 text-start btn", {
-          "btn-secondary": channel.id === currentChannel,
-        })}
-        onClick={() => {
-          dispatch(currentChatActions.changeCurrentChannel(channel));
-        }}
-      >
-        <span className="me-1">#</span>
-        {channel.name}
-      </button>
+      {channel.id > 2 && (
+        <div role="group" className="d-flex dropdown btn-group">
+          <button
+            type="button"
+            className={cn("w-100 rounded-0 text-start btn text-truncate", {
+              "btn-secondary": channel.id === currentChannel,
+            })}
+            onClick={() => {
+              dispatch(currentChatActions.changeCurrentChannel(channel));
+            }}
+          >
+            <span className="me-1">#</span>
+            {channel.name}
+          </button>
+          <button
+            type="button"
+            id={channel.id}
+            aria-expanded="true"
+            data-bs-toggle="dropdown"
+            className=" dropdown-toggle dropdown-toggle-split btn"
+          >
+            <span className="visually-hidden">Управление каналом</span>
+          </button>
+          <div
+            aria-labelledby={channel.id}
+            className="dropdown-menu dropdown-menu-end"
+          >
+            <a
+              className="dropdown-item"
+              role="button"
+              href="#"
+              onClick={() => {
+                const token = localStorage.getItem("token");
+                axios.delete(`api/v1/channels/${channel.id}`, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
+              }}
+            >
+              Удалить
+            </a>
+            <a
+              className="dropdown-item"
+              role="button"
+              href="#"
+              onClick={() => handleRenameClick(channel)}
+            >
+              Переименовать
+            </a>
+          </div>
+        </div>
+      )}
+      {channel.id < 3 && (
+        <button
+          type="button"
+          className={cn("w-100 rounded-0 text-start btn", {
+            "btn-secondary": channel.id === currentChannel,
+          })}
+          onClick={() => {
+            dispatch(currentChatActions.changeCurrentChannel(channel));
+          }}
+        >
+          <span className="me-1">#</span>
+          {channel.name}
+        </button>
+      )}
     </li>
   ));
 
@@ -108,7 +167,7 @@ export const MainPage = () => {
   };
 
   const handleChannel = () => {
-    dispatch(modalActions.changesModal(true));
+    dispatch(modalActions.openModal());
   };
 
   return (
