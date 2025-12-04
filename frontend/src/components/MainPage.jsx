@@ -2,6 +2,7 @@ import axios from "axios";
 import { actions as channelsActions } from "../assets/slices/channelsSlice";
 import { actions as messagesActions } from "../assets/slices/messagesSlice";
 import { actions as modalActions } from "../assets/slices/modalSlice";
+import { actions as currentChatActions } from "../assets/slices/currentValueChatSlice";
 import { Modal } from "./Modal";
 import cn from "classnames";
 import { useDispatch } from "react-redux";
@@ -9,6 +10,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 
 const Channels = ({ data, currentChannel }) => {
+  const dispatch = useDispatch();
   const channelList = data.map((channel) => (
     <li key={channel.id} className="nav-item w-100" id={channel.id}>
       <button
@@ -17,6 +19,9 @@ const Channels = ({ data, currentChannel }) => {
         className={cn("w-100 rounded-0 text-start btn", {
           "btn-secondary": channel.id === currentChannel,
         })}
+        onClick={() => {
+          dispatch(currentChatActions.changeCurrentChannel(channel));
+        }}
       >
         <span className="me-1">#</span>
         {channel.name}
