@@ -49,14 +49,7 @@ const Channels = ({ data, currentChannel }) => {
               className="dropdown-item"
               role="button"
               href="#"
-              onClick={() => {
-                const token = localStorage.getItem("token");
-                axios.delete(`api/v1/channels/${channel.id}`, {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                });
-              }}
+              onClick={() => dispatch(modalActions.openDeleteModal(channel))}
             >
               Удалить
             </a>
@@ -138,16 +131,16 @@ export const MainPage = () => {
   const dataMessages = useSelector((state) => state.messagesReducer);
   const modalOpen = useSelector((state) => state.modalReducer.activeModal);
 
-  const idChannel = useSelector((state) => state.currentChatReduсer.idChannel);
+  const idChannel = useSelector((state) => state.currentChatReducer.idChannel);
   const nameChannel = useSelector(
-    (state) => state.currentChatReduсer.nameChannel,
+    (state) => state.currentChatReducer.nameChannel,
   );
 
   const currentDataMessages = dataMessages.messages.filter(
     (message) => message.channelId === idChannel,
   );
 
-  const nameUser = useSelector((state) => state.currentChatReduсer.userName);
+  const nameUser = useSelector((state) => state.currentChatReducer.userName);
 
   const handleSubmitMessage = (e) => {
     e.preventDefault();

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   activeModal: false,
-  rename: false,
+  statusModal: null,
   initialValue: "",
   channelId: null,
 };
@@ -13,21 +13,24 @@ const modalSlice = createSlice({
   reducers: {
     openModal(state) {
       state.activeModal = true;
-      state.rename = false;
+      state.statusModal = "add";
       state.initialValue = "";
       state.channelId = null;
     },
     openRenameModal(state, { payload }) {
       state.activeModal = true;
-      state.rename = true;
+      state.statusModal = "rename";
       state.initialValue = payload.name;
       state.channelId = payload.id;
     },
-    closeModal: (state) => {
-      state.activeModal = false;
-      state.initialValue = "";
-      state.channelId = null;
-      state.rename = false;
+    closeModal: () => {
+      return initialState;
+    },
+    openDeleteModal(state, { payload }) {
+      state.activeModal = true;
+      state.statusModal = "delete";
+      state.initialValue = payload.name;
+      state.channelId = payload.id;
     },
   },
 });
