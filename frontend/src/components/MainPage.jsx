@@ -8,6 +8,7 @@ import cn from "classnames";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Channels = ({ data, currentChannel }) => {
   const dispatch = useDispatch();
@@ -110,6 +111,7 @@ const Messages = ({ data }) => {
 
 export const MainPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -163,6 +165,11 @@ export const MainPage = () => {
     dispatch(modalActions.openModal());
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+    return;
+  };
   return (
     <>
       <div className="d-flex flex-column h-100">
@@ -171,7 +178,11 @@ export const MainPage = () => {
             <a className="navbar-brand" href="/">
               Hexlet Chat
             </a>
-            <button type="button" className="btn btn-primary">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleLogout}
+            >
               Выйти
             </button>
           </div>
@@ -229,7 +240,7 @@ export const MainPage = () => {
                         aria-label="Новое сообщение"
                         placeholder="Введите сообщение..."
                         className="border-0 p-0 ps-2 form-control"
-                        //value=""
+                        
                       />
                       <button
                         type="submit"

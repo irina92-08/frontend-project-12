@@ -6,7 +6,7 @@ import cn from "classnames";
 import { useDispatch } from "react-redux";
 import { actions as currentChatActions } from "../assets/slices/currentValueChatSlice";
 
-export const FormComponent = () => {
+export const FormLoging = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -118,7 +118,7 @@ export const FormComponent = () => {
               <div className="card-footer p-4">
                 <div className="text-center">
                   <span>Нет аккаунта? </span>
-                  <a href="#">Регистрация</a>
+                  <a href="/signup">Регистрация</a>
                 </div>
               </div>
             </div>
