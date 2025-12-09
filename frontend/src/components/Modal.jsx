@@ -6,8 +6,8 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import * as yup from "yup";
 import cn from "classnames";
+import { useTranslation } from "react-i18next";
 
-// Выносим FormikModal в отдельный компонент
 const FormikModal = ({
   initialValue,
   modalContext,
@@ -18,16 +18,16 @@ const FormikModal = ({
 }) => {
   const dispatch = useDispatch();
 
+  const { t } = useTranslation();
   const schema = yup.object().shape({
     name: yup
       .string()
-      .min(3, "от 3 до 20 символов")
-      .max(20, "от 3 до 20 символов")
-      .required("Обязательное поле")
-      .test("unique-name", "Должно быть уникальным", function (value) {
+      .min(3, t("modal.symbols"))
+      .max(20, t("modal.symbols"))
+      .required(t("modal.require"))
+      .test("unique-name", t("modal.unique"), function (value) {
         const dataNames = dataChannels.channels
           .filter((channel) => {
-            // При переименовании исключаем текущий канал из проверки
             if (statusModal === "rename" && channelId) {
               return channel.id !== channelId;
             }
@@ -88,7 +88,7 @@ const FormikModal = ({
               autoFocus
             />
             <label htmlFor="name" className="visually-hidden">
-              Имя канала
+              {t("modal.nameChannel")}
             </label>
           </div>
 
@@ -102,7 +102,7 @@ const FormikModal = ({
               disabled={isSubmitting}
               onClick={onClose}
             >
-              Отменить
+              {t("modal.cancel")}
             </button>
             <button
               type="submit"
@@ -118,10 +118,9 @@ const FormikModal = ({
   );
 };
 
-// Выносим DeleteModal в отдельный компонент
 const DeleteModal = ({ modalContext, channelId, dataChannels, onClose }) => {
   const dispatch = useDispatch();
-
+  const { t } = useTranslation();
   const handleDelete = async () => {
     const token = localStorage.getItem("token");
 
@@ -147,14 +146,14 @@ const DeleteModal = ({ modalContext, channelId, dataChannels, onClose }) => {
 
   return (
     <>
-      <p className="lead">Уверены?</p>
+      <p className="lead">{t("modal.areYouSure")}</p>
       <div className="d-flex justify-content-end">
         <button
           type="button"
           className="me-2 btn btn-secondary"
           onClick={onClose}
         >
-          Отменить
+          {t("modal.cancel")}
         </button>
         <button type="button" className="btn btn-danger" onClick={handleDelete}>
           {modalContext.modalButton}
@@ -164,15 +163,14 @@ const DeleteModal = ({ modalContext, channelId, dataChannels, onClose }) => {
   );
 };
 
-// Основной компонент Modal
 export const Modal = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const modal = useSelector((state) => state.modalReducer);
   const { initialValue, statusModal, channelId } = modal;
 
   const dataChannels = useSelector((state) => state.channelsReducer);
 
-  // Инициализация modalContext с значениями по умолчанию
   const modalContext = {
     modalTitle: "",
     modalButton: "",
@@ -180,32 +178,29 @@ export const Modal = () => {
     method: "",
   };
 
-  // Исправленный switch-case с break
   switch (statusModal) {
     case "rename":
-      modalContext.modalTitle = "Переименовать канал";
-      modalContext.modalButton = "Переименовать";
+      modalContext.modalTitle = t("modal.renameChannel");
+      modalContext.modalButton = t("modal.rename");
       modalContext.url = `/api/v1/channels/${channelId}`;
       modalContext.method = "patch";
       break;
 
     case "add":
-      modalContext.modalTitle = "Добавить канал";
-      modalContext.modalButton = "Отправить";
+      modalContext.modalTitle = t("modal.addChannel");
+      modalContext.modalButton = t("modal.send");
       modalContext.url = `/api/v1/channels`;
       modalContext.method = "post";
       break;
 
     case "delete":
-      modalContext.modalTitle = "Удалить канал";
-      modalContext.modalButton = "Удалить";
+      modalContext.modalTitle = t("modal.deleteChannel");
+      modalContext.modalButton = t("modal.delete");
       modalContext.url = `/api/v1/channels/${channelId}`;
       modalContext.method = "delete";
       break;
 
     default:
-      // modalContext.modalTitle = "Модальное окно";
-      // modalContext.modalButton = "Подтвердить";
       console.log("Неизвестный запрос");
       break;
   }

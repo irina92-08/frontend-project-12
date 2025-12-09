@@ -6,9 +6,12 @@ import cn from "classnames";
 import { useDispatch } from "react-redux";
 import { actions as currentChatActions } from "../assets/slices/currentValueChatSlice";
 
+import { useTranslation } from "react-i18next";
+
 export const FormLoging = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   return (
     <div className="d-flex flex-column h-100">
@@ -25,11 +28,15 @@ export const FormLoging = () => {
             <div className="card shadow-sm">
               <div className="card-body row p-5">
                 <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                  <img src={logingImg} className="rounded-circle" alt="Войти" />
+                  <img
+                    src={logingImg}
+                    className="rounded-circle"
+                    alt={t("loging.entrance")}
+                  />
                 </div>
                 <div className="col-12 col-md-6 d-flex row justify-content-center align-content-center h-100">
                   <div className="col-12">
-                    <h1 className="text-center mb-4">Войти</h1>
+                    <h1 className="text-center mb-4">{t("loging.entrance")}</h1>
                     <Formik
                       initialValues={{
                         username: "",
@@ -74,19 +81,21 @@ export const FormLoging = () => {
                             <Field
                               name="username"
                               required=""
-                              placeholder="Ваш ник"
+                              placeholder={t("loging.username")}
                               id="username"
                               className={cn("form-control", {
                                 "is-invalid": values.error,
                               })}
                             />
-                            <label htmlFor="username">Ваш ник</label>
+                            <label htmlFor="username">
+                              {t("loging.username")}
+                            </label>
                           </div>
                           <div className="form-floating mb-4">
                             <Field
                               name="password"
                               required=""
-                              placeholder="Пароль"
+                              placeholder={t("loging.password")}
                               type="password"
                               id="password"
                               className={cn("form-control", {
@@ -94,11 +103,11 @@ export const FormLoging = () => {
                               })}
                             />
                             <label className="form-label" htmlFor="password">
-                              Пароль
+                              {t("loging.password")}
                             </label>
                             {values.error && (
                               <div className="invalid-feedback">
-                                Неверные имя пользователя или пароль
+                                {t("loging.invalidFeedback")}
                               </div>
                             )}
                           </div>
@@ -107,7 +116,7 @@ export const FormLoging = () => {
                             className="w-100 mb-3 btn btn-outline-primary"
                             disabled={isSubmitting}
                           >
-                            Войти
+                            {t("loging.entrance")}
                           </button>
                         </Form>
                       )}
@@ -117,8 +126,8 @@ export const FormLoging = () => {
               </div>
               <div className="card-footer p-4">
                 <div className="text-center">
-                  <span>Нет аккаунта? </span>
-                  <a href="/signup">Регистрация</a>
+                  <span>{t("loging.noAccount")} </span>
+                  <a href="/signup">{t("loging.signup")}</a>
                 </div>
               </div>
             </div>

@@ -6,24 +6,26 @@ import { actions as currentChatActions } from "../assets/slices/currentValueChat
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export const FormSignup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const schema = yup.object().shape({
     username: yup
       .string()
-      .min(3, "от 3 до 20 символов")
-      .max(20, "от 3 до 20 символов")
-      .required("Обязательное поле"),
+      .min(3, t("signup.symbols"))
+      .max(20, t("signup.symbols"))
+      .required(t("signup.require")),
 
     password: yup
       .string()
-      .min(6, "Не менее 6 символов")
-      .required("Обязательное поле"),
+      .min(6, t("signup.symbolsPassword"))
+      .required(t("signup.require")),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref("password"), null], "Пароли должны совпадать"),
+      .oneOf([yup.ref("password"), null], t("signup.mastMutch")),
   });
 
   return (
@@ -35,7 +37,7 @@ export const FormSignup = () => {
           </a>
         </div>
       </nav>
-      <div className="container">
+      <div className="container-fluid h-100">
         <div className="row justify-content-center align-content-center h-100">
           <div className="col-12 col-md-8 col-xxl-6">
             <div className="card shadow-sm">
@@ -44,7 +46,7 @@ export const FormSignup = () => {
                   <img
                     src={signupImg}
                     className="rounded-circle"
-                    alt="Регистрация"
+                    alt={t("signup.registration")}
                   />
                 </div>
                 <Formik
@@ -58,7 +60,7 @@ export const FormSignup = () => {
                   validationSchema={schema}
                   onSubmit={async (
                     values,
-                    { setSubmitting, resetForm, setFieldError },
+                    { setSubmitting, setFieldError }, //resetForm - если нужна очистка формы
                   ) => {
                     await axios
                       .post("api/v1/signup", values)
@@ -71,22 +73,15 @@ export const FormSignup = () => {
                         );
                         navigate("/");
                         setSubmitting(false);
-                        resetForm();
                       })
                       .catch((error) => {
                         console.log(error);
                         console.log(error.response?.status);
 
                         if (error.response?.status === 409) {
-                          setFieldError(
-                            "username",
-                            "Такой пользователь уже существует",
-                          );
+                          setFieldError("username", t("signup.userExists"));
                         } else {
-                          setFieldError(
-                            "form",
-                            "Ошибка регистрации. Попробуйте снова.",
-                          );
+                          setFieldError("form", t("signup.errorRegistration"));
                         }
                         setSubmitting(false);
                       });
@@ -94,20 +89,21 @@ export const FormSignup = () => {
                 >
                   {({ errors, isSubmitting, handleSubmit, touched }) => (
                     <Form className="w-50" onSubmit={handleSubmit}>
-                      <h1 className="text-center mb-4">Регистрация</h1>
+                      <h1 className="text-center mb-4">
+                        {t("signup.registration")}
+                      </h1>
                       <div className="form-floating mb-3">
                         <Field
-                          placeholder="От 3 до 20 символов"
+                          placeholder={t("signup.symbols")}
                           name="username"
                           autoComplete="username"
-                          //   required=""
                           id="username"
                           className={cn("form-control", {
                             "is-invalid": errors.username && touched.username,
                           })}
                         />
                         <label className="form-label" htmlFor="username">
-                          Имя пользователя
+                          {t("signup.username")}
                         </label>
                         {errors.username && touched.username && (
                           <div className="invalid-tooltip">
@@ -117,10 +113,9 @@ export const FormSignup = () => {
                       </div>
                       <div className="form-floating mb-3">
                         <Field
-                          placeholder="Не менее 6 символов"
+                          placeholder={t("signup.symbolsPassword")}
                           name="password"
                           aria-describedby="passwordHelpBlock"
-                          //   required=""
                           autoComplete="new-password"
                           type="password"
                           id="password"
@@ -134,12 +129,12 @@ export const FormSignup = () => {
                           </div>
                         )}
                         <label className="form-label" htmlFor="password">
-                          Пароль
+                          {t("signup.password")}
                         </label>
                       </div>
                       <div className="form-floating mb-4">
                         <Field
-                          placeholder="Пароли должны совпадать"
+                          placeholder={t("signup.mastMutch")}
                           name="confirmPassword"
                           //   required=""
                           autoComplete="new-password"
@@ -156,7 +151,7 @@ export const FormSignup = () => {
                           </div>
                         )}
                         <label className="form-label" htmlFor="confirmPassword">
-                          Подтвердите пароль
+                          {t("signup.confirm")}
                         </label>
                       </div>
                       <button
@@ -164,7 +159,7 @@ export const FormSignup = () => {
                         className="w-100 btn btn-outline-primary"
                         disabled={isSubmitting}
                       >
-                        Зарегистрироваться
+                        {t("signup.registr")}
                       </button>
                     </Form>
                   )}

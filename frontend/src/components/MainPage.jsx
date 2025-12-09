@@ -9,9 +9,11 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Channels = ({ data, currentChannel }) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const handleRenameClick = (channel) => {
     dispatch(modalActions.openRenameModal(channel));
@@ -40,7 +42,9 @@ const Channels = ({ data, currentChannel }) => {
             data-bs-toggle="dropdown"
             className=" dropdown-toggle dropdown-toggle-split btn"
           >
-            <span className="visually-hidden">Управление каналом</span>
+            <span className="visually-hidden">
+              {t("mainPage.managementChannel")}
+            </span>
           </button>
           <div
             aria-labelledby={channel.id}
@@ -49,18 +53,16 @@ const Channels = ({ data, currentChannel }) => {
             <a
               className="dropdown-item"
               role="button"
-              href="#"
               onClick={() => dispatch(modalActions.openDeleteModal(channel))}
             >
-              Удалить
+              {t("mainPage.delete")}
             </a>
             <a
               className="dropdown-item"
               role="button"
-              href="#"
               onClick={() => handleRenameClick(channel)}
             >
-              Переименовать
+              {t("mainPage.rename")}
             </a>
           </div>
         </div>
@@ -112,6 +114,7 @@ const Messages = ({ data }) => {
 export const MainPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -183,7 +186,7 @@ export const MainPage = () => {
               className="btn btn-primary"
               onClick={handleLogout}
             >
-              Выйти
+              {t("mainPage.exit")}
             </button>
           </div>
         </nav>
@@ -191,7 +194,7 @@ export const MainPage = () => {
           <div className="row h-100 bg-white flex-md-row">
             <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
               <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
-                <b>Каналы</b>
+                <b>{t("mainPage.channels")}</b>
                 <button
                   type="button"
                   className="p-0 text-primary btn btn-group-vertical"
@@ -237,10 +240,9 @@ export const MainPage = () => {
                     <div className="input-group has-validation">
                       <input
                         name="body"
-                        aria-label="Новое сообщение"
-                        placeholder="Введите сообщение..."
+                        aria-label={t("mainPage.newMessage")}
+                        placeholder={t("mainPage.message")}
                         className="border-0 p-0 ps-2 form-control"
-                        
                       />
                       <button
                         type="submit"
@@ -257,7 +259,9 @@ export const MainPage = () => {
                         >
                           <path d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"></path>
                         </svg>
-                        <span className="visually-hidden">Отправить</span>
+                        <span className="visually-hidden">
+                          {t("mainPage.send")}
+                        </span>
                       </button>
                     </div>
                   </form>
