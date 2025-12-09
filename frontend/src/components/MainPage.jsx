@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ToastContainer, toast } from "react-toastify";
 
 const Channels = ({ data, currentChannel }) => {
   const dispatch = useDispatch();
@@ -118,20 +119,26 @@ export const MainPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
-      const headers = { Authorization: `Bearer ${token}` };
+      try {
+        const token = localStorage.getItem("token");
+        const headers = { Authorization: `Bearer ${token}` };
 
-      const [channelsResponse, messagesResponse] = await Promise.all([
-        axios.get("/api/v1/channels", { headers }),
-        axios.get("/api/v1/messages", { headers }),
-      ]);
-      console.log("messagesResponse.data", messagesResponse.data);
-      dispatch(channelsActions.setChannels(channelsResponse.data));
-      dispatch(messagesActions.setMessages(messagesResponse.data));
+        const [channelsResponse, messagesResponse] = await Promise.all([
+          axios.get("/api/v1/channels", { headers }),
+          axios.get("/api/v1/messages", { headers }),
+        ]);
+        console.log("messagesResponse.data", messagesResponse.data);
+        dispatch(channelsActions.setChannels(channelsResponse.data));
+        dispatch(messagesActions.setMessages(messagesResponse.data));
+      } catch (error) {
+        if (!error.response) {
+          toast.error(t("networkError"));
+        }
+      }
     };
 
     fetchData();
-  }, [dispatch]);
+  }, [dispatch, t]);
   const dataChannels = useSelector((state) => state.channelsReducer);
   const dataMessages = useSelector((state) => state.messagesReducer);
   const modalOpen = useSelector((state) => state.modalReducer.activeModal);
@@ -151,17 +158,28 @@ export const MainPage = () => {
     e.preventDefault();
 
     const text = e.target.elements.body.value;
-    e.target.elements.body.value = "";
-    console.log(e);
+
+    const button = e.target.querySelector('button[type="submit"]');
+    button.disabled = true;
 
     const newMessage = { body: text, channelId: idChannel, username: nameUser };
     const token = localStorage.getItem("token");
 
-    axios.post("/api/v1/messages", newMessage, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    axios
+      .post("/api/v1/messages", newMessage, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => (e.target.elements.body.value = ""))
+      .catch((error) => {
+        if (!error.response) {
+          toast.error(t("networkError"));
+        }
+      })
+      .finally(() => {
+        button.disabled = false;
+      });
   };
 
   const handleChannel = () => {
@@ -244,11 +262,7 @@ export const MainPage = () => {
                         placeholder={t("mainPage.message")}
                         className="border-0 p-0 ps-2 form-control"
                       />
-                      <button
-                        type="submit"
-                        //disabled=""
-                        className="btn btn-group-vertical"
-                      >
+                      <button type="submit" className="btn btn-group-vertical">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 16 16"
@@ -271,7 +285,7 @@ export const MainPage = () => {
           </div>
         </div>
       </div>
-      <div className="Toastify"></div>
+      <ToastContainer />
       {modalOpen && <Modal />}
     </>
   );

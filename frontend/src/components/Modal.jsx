@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import * as yup from "yup";
 import cn from "classnames";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 const FormikModal = ({
   initialValue,
@@ -64,11 +65,18 @@ const FormikModal = ({
           if (statusModal === "add" || statusModal === "rename") {
             dispatch(currentChatActions.changeCurrentChannel(response.data));
           }
+          if (statusModal === "add") {
+            toast.success(t("succesAdd"));
+          }
+          if (statusModal === "rename") {
+            toast.success(t("succesRename"));
+          }
 
           dispatch(modalActions.closeModal());
           resetForm();
         } catch (error) {
-          console.error("Ошибка при отправке формы:", error);
+          console.error(t("networkError"), error);
+          toast.error(t("networkError"));
           setFieldValue("error", true);
         } finally {
           setSubmitting(false);
@@ -137,10 +145,11 @@ const DeleteModal = ({ modalContext, channelId, dataChannels, onClose }) => {
       if (remainingChannels.length > 0) {
         dispatch(currentChatActions.changeCurrentChannel(remainingChannels[0]));
       }
-
+      toast.success(t("succesDelete"));
       dispatch(modalActions.closeModal());
     } catch (error) {
-      console.error("Ошибка при удалении канала:", error);
+      console.error(t("networkError"), error);
+      toast.error(t("networkError"));
     }
   };
 

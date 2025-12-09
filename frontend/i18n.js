@@ -54,6 +54,10 @@ const resources = {
         confirm: "Подтвердите пароль",
         registr: "Зарегистрироваться",
       },
+      networkError: "Ошибка соединения",
+      succesAdd: "Канал создан",
+      succesRename: "Канал переименован",
+      succesDelete: "Канал удалён",
     },
   },
 };
