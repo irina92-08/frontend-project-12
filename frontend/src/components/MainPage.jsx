@@ -11,6 +11,9 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ToastContainer, toast } from "react-toastify";
+import rollbar from "../../rollbar-config";
+
+import filter from "leo-profanity";
 
 const Channels = ({ data, currentChannel }) => {
   const dispatch = useDispatch();
@@ -115,7 +118,19 @@ const Messages = ({ data }) => {
 export const MainPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const initFilter = () => {
+      const currentLang = i18n.language;
+      const langCode = currentLang.split("-")[0];
+      filter.loadDictionary(langCode);
+    };
+
+    initFilter();
+
+    i18n.on("languageChanged", initFilter);
+  }, [i18n]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -133,6 +148,7 @@ export const MainPage = () => {
       } catch (error) {
         if (!error.response) {
           toast.error(t("networkError"));
+          rollbar.error("Ошибка получения данных");
         }
       }
     };
@@ -159,10 +175,16 @@ export const MainPage = () => {
 
     const text = e.target.elements.body.value;
 
+    const newText = filter.clean(text);
+
     const button = e.target.querySelector('button[type="submit"]');
     button.disabled = true;
 
-    const newMessage = { body: text, channelId: idChannel, username: nameUser };
+    const newMessage = {
+      body: newText,
+      channelId: idChannel,
+      username: nameUser,
+    };
     const token = localStorage.getItem("token");
 
     axios
@@ -175,6 +197,7 @@ export const MainPage = () => {
       .catch((error) => {
         if (!error.response) {
           toast.error(t("networkError"));
+          rollbar.error("Ошибка при отправке сообщения");
         }
       })
       .finally(() => {

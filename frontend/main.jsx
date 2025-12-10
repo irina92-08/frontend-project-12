@@ -5,15 +5,19 @@ import "bootstrap";
 import { Provider } from "react-redux";
 import store from "./src/assets/slices/index.js";
 import { i18nInit } from "./i18n";
+import rollbar from "./rollbar-config.js";
+import ErrorBoundary from "./ErrorBoundary";
 
 const initApp = async () => {
   await i18nInit();
   const container = document.getElementById("chat");
   const root = ReactDom.createRoot(container);
   root.render(
-    <Provider store={store}>
-      <App />
-    </Provider>,
+    <ErrorBoundary>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ErrorBoundary>,
   );
 };
 

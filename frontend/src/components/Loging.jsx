@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import cn from "classnames";
 import { useDispatch } from "react-redux";
 import { actions as currentChatActions } from "../assets/slices/currentValueChatSlice";
-
+import rollbar from "../../rollbar-config";
 import { useTranslation } from "react-i18next";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -76,6 +76,9 @@ export const FormLoging = () => {
                               console.log(error.response?.status);
                               if (!error.response) {
                                 toast.error(t("networkError"));
+                                rollbar.error(
+                                  "Ошибка отправки данных формы регистрации",
+                                );
                               }
 
                               if (error.response?.status === 401) {

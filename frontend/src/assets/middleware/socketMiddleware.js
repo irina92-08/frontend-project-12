@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 import { actions as messagesActions } from "../slices/messagesSlice";
 import { actions as channelsActions } from "../slices/channelsSlice";
 import { toast } from "react-toastify";
-
+import rollbar from "../../../rollbar-config";
 import i18n from "../../../i18n";
 
 let socket = null;
@@ -14,6 +14,7 @@ export const socketMiddleware = (store) => (next) => (action) => {
     socket.on("connect_error", (error) => {
       console.error("Socket connection error:", error);
       toast.error(i18n.t("networkError"));
+      rollbar.error("Ошибка соединения сокета");
     });
 
     // socket.on("error", (error) => {

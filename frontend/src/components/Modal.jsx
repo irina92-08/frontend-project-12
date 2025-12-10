@@ -8,6 +8,7 @@ import * as yup from "yup";
 import cn from "classnames";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { clean } from "leo-profanity";
 
 const FormikModal = ({
   initialValue,
@@ -53,12 +54,13 @@ const FormikModal = ({
       onSubmit={async (values, { setSubmitting, setFieldValue, resetForm }) => {
         setFieldValue("error", false);
         const token = localStorage.getItem("token");
+        const newName = clean(values.name);
 
         try {
           const response = await axios({
             method: modalContext.method,
             url: modalContext.url,
-            data: { name: values.name },
+            data: { name: newName },
             headers: { Authorization: `Bearer ${token}` },
           });
 
