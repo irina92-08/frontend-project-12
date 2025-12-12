@@ -67,7 +67,7 @@ export const FormSignup = () => {
                     ) => {
                       await axios
                         .post('api/v1/signup', values)
-                        .then(response => {
+                        .then((response) => {
                           const { token, username } = response.data
 
                           dispatch(
@@ -77,7 +77,7 @@ export const FormSignup = () => {
                           navigate('/')
                           setSubmitting(false)
                         })
-                        .catch(error => {
+                        .catch((error) => {
                           console.log(error)
                           console.log(error.response?.status)
                           if (!error.response) {

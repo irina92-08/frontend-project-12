@@ -34,10 +34,7 @@ export default [
 
       '@stylistic/quotes': ['error', 'single'],
       '@stylistic/semi': ['error', 'never'],
-      '@stylistic/arrow-parens': ['error', 'as-needed', {
-        requireForBlockBody: false
-      }],
-
+      '@stylistic/arrow-parens': ['error', 'always'],
       '@stylistic/brace-style': ['error', '1tbs'],
       '@stylistic/no-trailing-spaces': 'error',
       '@stylistic/no-multiple-empty-lines': ['error', { max: 1 }],
@@ -45,12 +42,11 @@ export default [
       '@stylistic/spaced-comment': ['error', 'always'],
       '@stylistic/indent': ['error', 2],
       '@stylistic/quote-props': ['error', 'consistent-as-needed'],
-
+      '@stylistic/comma-dangle': ['error', 'always-multiline'],
       '@stylistic/jsx-one-expression-per-line': 'off',
       '@stylistic/jsx-closing-tag-location': 'off',
       '@stylistic/multiline-ternary': 'off',
       '@stylistic/operator-linebreak': 'off',
-
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
       'import/extensions': 'off',
