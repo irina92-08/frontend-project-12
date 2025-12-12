@@ -1,40 +1,40 @@
-import axios from "axios";
-import { actions as channelsActions } from "../assets/slices/channelsSlice";
-import { actions as messagesActions } from "../assets/slices/messagesSlice";
-import { actions as modalActions } from "../assets/slices/modalSlice";
-import { actions as currentChatActions } from "../assets/slices/currentValueChatSlice";
-import { actions as authActions } from "../assets/slices/authSlice";
-import { Modal } from "./Modal";
-import cn from "classnames";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { ToastContainer, toast } from "react-toastify";
-import rollbar from "../../rollbar-config";
+import axios from 'axios'
+import { actions as channelsActions } from '../assets/slices/channelsSlice'
+import { actions as messagesActions } from '../assets/slices/messagesSlice'
+import { actions as modalActions } from '../assets/slices/modalSlice'
+import { actions as currentChatActions } from '../assets/slices/currentValueChatSlice'
+import { actions as authActions } from '../assets/slices/authSlice'
+import { Modal } from './Modal'
+import cn from 'classnames'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { ToastContainer, toast } from 'react-toastify'
+import rollbar from '../../rollbar-config'
 
-import filter from "leo-profanity";
+import filter from 'leo-profanity'
 
 const Channels = ({ data, currentChannel }) => {
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
 
-  const handleRenameClick = (channel) => {
-    dispatch(modalActions.openRenameModal(channel));
-  };
+  const handleRenameClick = channel => {
+    dispatch(modalActions.openRenameModal(channel))
+  }
 
-  const channelList = data.map((channel) => (
+  const channelList = data.map(channel => (
     <li key={channel.id} className="nav-item w-100" id={channel.id}>
       {channel.id > 2 && (
         <div role="group" className="d-flex dropdown btn-group">
           <button
             type="button"
-            className={cn("w-100 rounded-0 text-start btn text-truncate", {
-              "btn-secondary": channel.id === currentChannel,
+            className={cn('w-100 rounded-0 text-start btn text-truncate', {
+              'btn-secondary': channel.id === currentChannel,
             })}
             onClick={() => {
-              dispatch(currentChatActions.changeCurrentChannel(channel));
+              dispatch(currentChatActions.changeCurrentChannel(channel))
             }}
           >
             <span className="me-1">#</span>
@@ -48,7 +48,7 @@ const Channels = ({ data, currentChannel }) => {
             className=" dropdown-toggle dropdown-toggle-split btn"
           >
             <span className="visually-hidden">
-              {t("mainPage.managementChannel")}
+              {t('mainPage.managementChannel')}
             </span>
           </button>
           <div
@@ -60,14 +60,14 @@ const Channels = ({ data, currentChannel }) => {
               role="button"
               onClick={() => dispatch(modalActions.openDeleteModal(channel))}
             >
-              {t("mainPage.delete")}
+              {t('mainPage.delete')}
             </a>
             <a
               className="dropdown-item"
               role="button"
               onClick={() => handleRenameClick(channel)}
             >
-              {t("mainPage.rename")}
+              {t('mainPage.rename')}
             </a>
           </div>
         </div>
@@ -75,11 +75,11 @@ const Channels = ({ data, currentChannel }) => {
       {channel.id < 3 && (
         <button
           type="button"
-          className={cn("w-100 rounded-0 text-start btn", {
-            "btn-secondary": channel.id === currentChannel,
+          className={cn('w-100 rounded-0 text-start btn', {
+            'btn-secondary': channel.id === currentChannel,
           })}
           onClick={() => {
-            dispatch(currentChatActions.changeCurrentChannel(channel));
+            dispatch(currentChatActions.changeCurrentChannel(channel))
           }}
         >
           <span className="me-1">#</span>
@@ -87,7 +87,7 @@ const Channels = ({ data, currentChannel }) => {
         </button>
       )}
     </li>
-  ));
+  ))
 
   return (
     <ul
@@ -96,30 +96,30 @@ const Channels = ({ data, currentChannel }) => {
     >
       {channelList}
     </ul>
-  );
-};
+  )
+}
 
 const Messages = ({ data }) => {
-  console.log(data);
+  console.log(data)
 
-  const messagesList = data.map((massege) => {
+  const messagesList = data.map(massege => {
     return (
       <div className="text-break mb-2" key={massege.id}>
         <b>{massege.username}</b>:{massege.body}
       </div>
-    );
-  });
+    )
+  })
   return (
     <div id="messages-box" className="chat-messages overflow-auto px-5 ">
       {messagesList}
     </div>
-  );
-};
+  )
+}
 
 export const MainPage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { t } = useTranslation();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { t } = useTranslation()
 
   // useEffect(() => {
   //   const initFilter = () => {
@@ -136,103 +136,103 @@ export const MainPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const headers = { Authorization: `Bearer ${token}` };
+        const token = localStorage.getItem('token')
+        const headers = { Authorization: `Bearer ${token}` }
 
         const [channelsResponse, messagesResponse] = await Promise.all([
-          axios.get("/api/v1/channels", { headers }),
-          axios.get("/api/v1/messages", { headers }),
-        ]);
+          axios.get('/api/v1/channels', { headers }),
+          axios.get('/api/v1/messages', { headers }),
+        ])
 
-        const filteredChannels = channelsResponse.data.map((channel) => ({
+        const filteredChannels = channelsResponse.data.map(channel => ({
           ...channel,
           name: filter.clean(channel.name),
-        }));
+        }))
 
-        dispatch(channelsActions.setChannels(filteredChannels));
+        dispatch(channelsActions.setChannels(filteredChannels))
 
-        dispatch(messagesActions.setMessages(messagesResponse.data));
+        dispatch(messagesActions.setMessages(messagesResponse.data))
       } catch (error) {
         if (!error.response) {
-          toast.error(t("networkError"));
-          rollbar.error("Ошибка получения данных");
+          toast.error(t('networkError'))
+          rollbar.error('Ошибка получения данных')
         }
       }
-    };
+    }
 
-    fetchData();
-  }, [dispatch, t]);
-  const dataChannels = useSelector((state) => state.channelsReducer);
-  const dataMessages = useSelector((state) => state.messagesReducer);
-  const modalOpen = useSelector((state) => state.modalReducer.activeModal);
+    fetchData()
+  }, [dispatch, t])
+  const dataChannels = useSelector(state => state.channelsReducer)
+  const dataMessages = useSelector(state => state.messagesReducer)
+  const modalOpen = useSelector(state => state.modalReducer.activeModal)
 
-  const idChannel = useSelector((state) => state.currentChatReducer.idChannel);
+  const idChannel = useSelector(state => state.currentChatReducer.idChannel)
   const nameChannel = useSelector(
-    (state) => state.currentChatReducer.nameChannel,
-  );
+    state => state.currentChatReducer.nameChannel,
+  )
 
   const currentDataMessages = dataMessages.messages.filter(
-    (message) => message.channelId === idChannel,
-  );
+    message => message.channelId === idChannel,
+  )
 
-  const nameUser = useSelector((state) => state.currentChatReducer.userName);
+  const nameUser = useSelector(state => state.currentChatReducer.userName)
 
-  const handleSubmitMessage = (e) => {
-    e.preventDefault();
+  const handleSubmitMessage = e => {
+    e.preventDefault()
 
-    const text = e.target.elements.body.value;
+    const text = e.target.elements.body.value
 
-    const newText = filter.clean(text);
+    const newText = filter.clean(text)
 
-    const button = e.target.querySelector('button[type="submit"]');
-    button.disabled = true;
+    const button = e.target.querySelector('button[type="submit"]')
+    button.disabled = true
 
     const newMessage = {
       body: newText,
       channelId: idChannel,
       username: nameUser,
-    };
-    const token = localStorage.getItem("token");
+    }
+    const token = localStorage.getItem('token')
 
     axios
-      .post("/api/v1/messages", newMessage, {
+      .post('/api/v1/messages', newMessage, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then(() => (e.target.elements.body.value = ""))
-      .catch((error) => {
+      .then(() => (e.target.elements.body.value = ''))
+      .catch(error => {
         if (!error.response) {
-          toast.error(t("networkError"));
-          rollbar.error("Ошибка при отправке сообщения");
+          toast.error(t('networkError'))
+          rollbar.error('Ошибка при отправке сообщения')
         }
       })
       .finally(() => {
-        button.disabled = false;
-      });
-  };
+        button.disabled = false
+      })
+  }
 
   const handleChannel = () => {
-    dispatch(modalActions.openModal());
-  };
+    dispatch(modalActions.openModal())
+  }
 
   const handleLogout = () => {
-    dispatch(authActions.logout());
-    navigate("/login");
-    return;
-  };
+    dispatch(authActions.logout())
+    navigate('/login')
+    return
+  }
 
-  const declensionWord = (num) => {
-    const numInWord = num.toString();
-    if (numInWord.slice(-1) === "1" && numInWord.slice(-2) !== "11") {
-      return `${num} сообщение`;
+  const declensionWord = num => {
+    const numInWord = num.toString()
+    if (numInWord.slice(-1) === '1' && numInWord.slice(-2) !== '11') {
+      return `${num} сообщение`
     }
     if (Number(numInWord.slice(-1)) > 1 && Number(numInWord.slice(-1)) < 5) {
-      return `${num} сообщения`;
+      return `${num} сообщения`
     } else {
-      return `${num} сообщений`;
+      return `${num} сообщений`
     }
-  };
+  }
   return (
     <>
       <div className="d-flex flex-column h-100">
@@ -246,7 +246,7 @@ export const MainPage = () => {
               className="btn btn-primary"
               onClick={handleLogout}
             >
-              {t("mainPage.exit")}
+              {t('mainPage.exit')}
             </button>
           </div>
         </nav>
@@ -254,7 +254,7 @@ export const MainPage = () => {
           <div className="row h-100 bg-white flex-md-row">
             <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
               <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
-                <b>{t("mainPage.channels")}</b>
+                <b>{t('mainPage.channels')}</b>
                 <button
                   type="button"
                   className="p-0 text-primary btn btn-group-vertical"
@@ -272,7 +272,7 @@ export const MainPage = () => {
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
                   </svg>
                   <span className="visually-hidden">
-                    {t("mainPage.addSymbol")}
+                    {t('mainPage.addSymbol')}
                   </span>
                 </button>
               </div>
@@ -302,8 +302,8 @@ export const MainPage = () => {
                     <div className="input-group has-validation">
                       <input
                         name="body"
-                        aria-label={t("mainPage.newMessage")}
-                        placeholder={t("mainPage.message")}
+                        aria-label={t('mainPage.newMessage')}
+                        placeholder={t('mainPage.message')}
                         className="border-0 p-0 ps-2 form-control"
                       />
                       <button type="submit" className="btn btn-group-vertical">
@@ -318,7 +318,7 @@ export const MainPage = () => {
                           <path d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"></path>
                         </svg>
                         <span className="visually-hidden">
-                          {t("mainPage.send")}
+                          {t('mainPage.send')}
                         </span>
                       </button>
                     </div>
@@ -332,5 +332,5 @@ export const MainPage = () => {
       <ToastContainer />
       {modalOpen && <Modal />}
     </>
-  );
-};
+  )
+}

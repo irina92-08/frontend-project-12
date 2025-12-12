@@ -1,14 +1,14 @@
-import { Formik, Form, Field } from "formik";
-import axios from "axios";
-import { actions as currentChatActions } from "../assets/slices/currentValueChatSlice";
-import { actions as modalActions } from "../assets/slices/modalSlice";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import * as yup from "yup";
-import cn from "classnames";
-import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
-import { clean } from "leo-profanity";
+import { Formik, Form, Field } from 'formik'
+import axios from 'axios'
+import { actions as currentChatActions } from '../assets/slices/currentValueChatSlice'
+import { actions as modalActions } from '../assets/slices/modalSlice'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import * as yup from 'yup'
+import cn from 'classnames'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+import { clean } from 'leo-profanity'
 
 const FormikModal = ({
   initialValue,
@@ -18,43 +18,43 @@ const FormikModal = ({
   dataChannels,
   onClose,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   const schema = yup.object().shape({
     name: yup
       .string()
-      .min(3, t("modal.symbols"))
-      .max(20, t("modal.symbols"))
-      .required(t("modal.require"))
-      .test("unique-name", t("modal.unique"), function (value) {
+      .min(3, t('modal.symbols'))
+      .max(20, t('modal.symbols'))
+      .required(t('modal.require'))
+      .test('unique-name', t('modal.unique'), function (value) {
         const dataNames = dataChannels.channels
-          .filter((channel) => {
-            if (statusModal === "rename" && channelId) {
-              return channel.id !== channelId;
+          .filter(channel => {
+            if (statusModal === 'rename' && channelId) {
+              return channel.id !== channelId
             }
-            return true;
+            return true
           })
-          .map((channel) => channel.name);
+          .map(channel => channel.name)
 
-        return !dataNames.includes(value);
+        return !dataNames.includes(value)
       }),
-  });
+  })
 
   return (
     <Formik
       enableReinitialize={true}
       initialValues={{
-        name: initialValue || "",
+        name: initialValue || '',
         error: false,
       }}
       validateOnChange={true}
       validateOnBlur={true}
       validationSchema={schema}
       onSubmit={async (values, { setSubmitting, setFieldValue, resetForm }) => {
-        setFieldValue("error", false);
-        const token = localStorage.getItem("token");
-        const newName = clean(values.name);
+        setFieldValue('error', false)
+        const token = localStorage.getItem('token')
+        const newName = clean(values.name)
 
         try {
           const response = await axios({
@@ -62,26 +62,26 @@ const FormikModal = ({
             url: modalContext.url,
             data: { name: newName },
             headers: { Authorization: `Bearer ${token}` },
-          });
+          })
 
-          if (statusModal === "add" || statusModal === "rename") {
-            dispatch(currentChatActions.changeCurrentChannel(response.data));
+          if (statusModal === 'add' || statusModal === 'rename') {
+            dispatch(currentChatActions.changeCurrentChannel(response.data))
           }
-          if (statusModal === "add") {
-            toast.success(t("succesAdd"));
+          if (statusModal === 'add') {
+            toast.success(t('succesAdd'))
           }
-          if (statusModal === "rename") {
-            toast.success(t("succesRename"));
+          if (statusModal === 'rename') {
+            toast.success(t('succesRename'))
           }
 
-          dispatch(modalActions.closeModal());
-          resetForm();
+          dispatch(modalActions.closeModal())
+          resetForm()
         } catch (error) {
-          console.error(t("networkError"), error);
-          toast.error(t("networkError"));
-          setFieldValue("error", true);
+          console.error(t('networkError'), error)
+          toast.error(t('networkError'))
+          setFieldValue('error', true)
         } finally {
-          setSubmitting(false);
+          setSubmitting(false)
         }
       }}
     >
@@ -92,13 +92,13 @@ const FormikModal = ({
               name="name"
               required
               id="name"
-              className={cn("form-control mb-2", {
-                "is-invalid": errors.name && touched.name,
+              className={cn('form-control mb-2', {
+                'is-invalid': errors.name && touched.name,
               })}
               autoFocus
             />
             <label htmlFor="name" className="visually-hidden">
-              {t("modal.nameChannel")}
+              {t('modal.nameChannel')}
             </label>
           </div>
 
@@ -112,7 +112,7 @@ const FormikModal = ({
               disabled={isSubmitting}
               onClick={onClose}
             >
-              {t("modal.cancel")}
+              {t('modal.cancel')}
             </button>
             <button
               type="submit"
@@ -125,100 +125,100 @@ const FormikModal = ({
         </Form>
       )}
     </Formik>
-  );
-};
+  )
+}
 
 const DeleteModal = ({ modalContext, channelId, dataChannels, onClose }) => {
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
   const handleDelete = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token')
 
     try {
       await axios({
         method: modalContext.method,
         url: modalContext.url,
         headers: { Authorization: `Bearer ${token}` },
-      });
+      })
 
       // Если удален текущий канал, переключаемся на первый доступный
-      const channels = dataChannels.channels;
-      const remainingChannels = channels.filter((ch) => ch.id !== channelId);
+      const channels = dataChannels.channels
+      const remainingChannels = channels.filter(ch => ch.id !== channelId)
       if (remainingChannels.length > 0) {
-        dispatch(currentChatActions.changeCurrentChannel(remainingChannels[0]));
+        dispatch(currentChatActions.changeCurrentChannel(remainingChannels[0]))
       }
-      toast.success(t("succesDelete"));
-      dispatch(modalActions.closeModal());
+      toast.success(t('succesDelete'))
+      dispatch(modalActions.closeModal())
     } catch (error) {
-      console.error(t("networkError"), error);
-      toast.error(t("networkError"));
+      console.error(t('networkError'), error)
+      toast.error(t('networkError'))
     }
-  };
+  }
 
   return (
     <>
-      <p className="lead">{t("modal.areYouSure")}</p>
+      <p className="lead">{t('modal.areYouSure')}</p>
       <div className="d-flex justify-content-end">
         <button
           type="button"
           className="me-2 btn btn-secondary"
           onClick={onClose}
         >
-          {t("modal.cancel")}
+          {t('modal.cancel')}
         </button>
         <button type="button" className="btn btn-danger" onClick={handleDelete}>
           {modalContext.modalButton}
         </button>
       </div>
     </>
-  );
-};
+  )
+}
 
 export const Modal = () => {
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
-  const modal = useSelector((state) => state.modalReducer);
-  const { initialValue, statusModal, channelId } = modal;
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
+  const modal = useSelector(state => state.modalReducer)
+  const { initialValue, statusModal, channelId } = modal
 
-  const dataChannels = useSelector((state) => state.channelsReducer);
+  const dataChannels = useSelector(state => state.channelsReducer)
 
   const modalContext = {
-    modalTitle: "",
-    modalButton: "",
-    url: "",
-    method: "",
-  };
+    modalTitle: '',
+    modalButton: '',
+    url: '',
+    method: '',
+  }
 
   switch (statusModal) {
-    case "rename":
-      modalContext.modalTitle = t("modal.renameChannel");
-      modalContext.modalButton = t("modal.rename");
-      modalContext.url = `/api/v1/channels/${channelId}`;
-      modalContext.method = "patch";
-      break;
+    case 'rename':
+      modalContext.modalTitle = t('modal.renameChannel')
+      modalContext.modalButton = t('modal.rename')
+      modalContext.url = `/api/v1/channels/${channelId}`
+      modalContext.method = 'patch'
+      break
 
-    case "add":
-      modalContext.modalTitle = t("modal.addChannel");
-      modalContext.modalButton = t("modal.send");
-      modalContext.url = `/api/v1/channels`;
-      modalContext.method = "post";
-      break;
+    case 'add':
+      modalContext.modalTitle = t('modal.addChannel')
+      modalContext.modalButton = t('modal.send')
+      modalContext.url = '/api/v1/channels'
+      modalContext.method = 'post'
+      break
 
-    case "delete":
-      modalContext.modalTitle = t("modal.deleteChannel");
-      modalContext.modalButton = t("modal.delete");
-      modalContext.url = `/api/v1/channels/${channelId}`;
-      modalContext.method = "delete";
-      break;
+    case 'delete':
+      modalContext.modalTitle = t('modal.deleteChannel')
+      modalContext.modalButton = t('modal.delete')
+      modalContext.url = `/api/v1/channels/${channelId}`
+      modalContext.method = 'delete'
+      break
 
     default:
-      console.log("Неизвестный запрос");
-      break;
+      console.log('Неизвестный запрос')
+      break
   }
 
   const handleCloseModal = () => {
-    dispatch(modalActions.closeModal());
-  };
+    dispatch(modalActions.closeModal())
+  }
 
   // // Если модальное окно не должно отображаться
   // if (!statusModal) {
@@ -230,7 +230,7 @@ export const Modal = () => {
       role="dialog"
       aria-modal="true"
       className="fade modal show"
-      style={{ display: "block" }}
+      style={{ display: 'block' }}
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
@@ -245,7 +245,7 @@ export const Modal = () => {
             ></button>
           </div>
           <div className="modal-body">
-            {statusModal === "delete" ? (
+            {statusModal === 'delete' ? (
               <DeleteModal
                 modalContext={modalContext}
                 channelId={channelId}
@@ -266,5 +266,5 @@ export const Modal = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

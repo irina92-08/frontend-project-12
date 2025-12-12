@@ -1,34 +1,34 @@
-import { Formik, Form, Field } from "formik";
-import signupImg from "../assets/images/signup.jpg";
-import * as yup from "yup";
-import cn from "classnames";
-import { actions as currentChatActions } from "../assets/slices/currentValueChatSlice";
-import { actions as authActions } from "../assets/slices/authSlice";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { ToastContainer, toast } from "react-toastify";
+import { Formik, Form, Field } from 'formik'
+import signupImg from '../assets/images/signup.jpg'
+import * as yup from 'yup'
+import cn from 'classnames'
+import { actions as currentChatActions } from '../assets/slices/currentValueChatSlice'
+import { actions as authActions } from '../assets/slices/authSlice'
+import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { ToastContainer, toast } from 'react-toastify'
 
 export const FormSignup = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { t } = useTranslation();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { t } = useTranslation()
   const schema = yup.object().shape({
     username: yup
       .string()
-      .min(3, t("signup.symbols"))
-      .max(20, t("signup.symbols"))
-      .required(t("signup.require")),
+      .min(3, t('signup.symbols'))
+      .max(20, t('signup.symbols'))
+      .required(t('signup.require')),
 
     password: yup
       .string()
-      .min(6, t("signup.symbolsPassword"))
-      .required(t("signup.require")),
+      .min(6, t('signup.symbolsPassword'))
+      .required(t('signup.require')),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref("password"), null], t("signup.mastMutch")),
-  });
+      .oneOf([yup.ref('password'), null], t('signup.mastMutch')),
+  })
 
   return (
     <>
@@ -49,14 +49,14 @@ export const FormSignup = () => {
                     <img
                       src={signupImg}
                       className="rounded-circle"
-                      alt={t("signup.registration")}
+                      alt={t('signup.registration')}
                     />
                   </div>
                   <Formik
                     initialValues={{
-                      username: "",
-                      password: "",
-                      confirmPassword: "",
+                      username: '',
+                      password: '',
+                      confirmPassword: '',
                     }}
                     validateOnChange={true}
                     validateOnBlur={false}
@@ -66,53 +66,53 @@ export const FormSignup = () => {
                       { setSubmitting, setFieldError }, //resetForm - если нужна очистка формы
                     ) => {
                       await axios
-                        .post("api/v1/signup", values)
-                        .then((response) => {
-                          const { token, username } = response.data;
+                        .post('api/v1/signup', values)
+                        .then(response => {
+                          const { token, username } = response.data
 
                           dispatch(
                             currentChatActions.setCurrentUserName(username),
-                          );
-                          dispatch(authActions.loginSuccess({ token }));
-                          navigate("/");
-                          setSubmitting(false);
+                          )
+                          dispatch(authActions.loginSuccess({ token }))
+                          navigate('/')
+                          setSubmitting(false)
                         })
-                        .catch((error) => {
-                          console.log(error);
-                          console.log(error.response?.status);
+                        .catch(error => {
+                          console.log(error)
+                          console.log(error.response?.status)
                           if (!error.response) {
-                            toast.error(t("networkError"));
-                            setFieldError("form", t("networkError"));
+                            toast.error(t('networkError'))
+                            setFieldError('form', t('networkError'))
                           }
                           if (error.response?.status === 409) {
-                            setFieldError("username", t("signup.userExists"));
+                            setFieldError('username', t('signup.userExists'))
                           } else {
                             setFieldError(
-                              "form",
-                              t("signup.errorRegistration"),
-                            );
+                              'form',
+                              t('signup.errorRegistration'),
+                            )
                           }
-                          setSubmitting(false);
-                        });
+                          setSubmitting(false)
+                        })
                     }}
                   >
                     {({ errors, isSubmitting, handleSubmit, touched }) => (
                       <Form className="w-50" onSubmit={handleSubmit}>
                         <h1 className="text-center mb-4">
-                          {t("signup.registration")}
+                          {t('signup.registration')}
                         </h1>
                         <div className="form-floating mb-3">
                           <Field
-                            placeholder={t("signup.symbols")}
+                            placeholder={t('signup.symbols')}
                             name="username"
                             autoComplete="username"
                             id="username"
-                            className={cn("form-control", {
-                              "is-invalid": errors.username && touched.username,
+                            className={cn('form-control', {
+                              'is-invalid': errors.username && touched.username,
                             })}
                           />
                           <label className="form-label" htmlFor="username">
-                            {t("signup.username")}
+                            {t('signup.username')}
                           </label>
                           {errors.username && touched.username && (
                             <div className="invalid-tooltip">
@@ -122,14 +122,14 @@ export const FormSignup = () => {
                         </div>
                         <div className="form-floating mb-3">
                           <Field
-                            placeholder={t("signup.symbolsPassword")}
+                            placeholder={t('signup.symbolsPassword')}
                             name="password"
                             aria-describedby="passwordHelpBlock"
                             autoComplete="new-password"
                             type="password"
                             id="password"
-                            className={cn("form-control", {
-                              "is-invalid": errors.password && touched.password,
+                            className={cn('form-control', {
+                              'is-invalid': errors.password && touched.password,
                             })}
                           />
                           {errors.password && touched.password && (
@@ -138,18 +138,18 @@ export const FormSignup = () => {
                             </div>
                           )}
                           <label className="form-label" htmlFor="password">
-                            {t("signup.password")}
+                            {t('signup.password')}
                           </label>
                         </div>
                         <div className="form-floating mb-4">
                           <Field
-                            placeholder={t("signup.mastMutch")}
+                            placeholder={t('signup.mastMutch')}
                             name="confirmPassword"
                             autoComplete="new-password"
                             type="password"
                             id="confirmPassword"
-                            className={cn("form-control", {
-                              "is-invalid":
+                            className={cn('form-control', {
+                              'is-invalid':
                                 errors.confirmPassword &&
                                 touched.confirmPassword,
                             })}
@@ -164,7 +164,7 @@ export const FormSignup = () => {
                             className="form-label"
                             htmlFor="confirmPassword"
                           >
-                            {t("signup.confirm")}
+                            {t('signup.confirm')}
                           </label>
                         </div>
                         <button
@@ -172,7 +172,7 @@ export const FormSignup = () => {
                           className="w-100 btn btn-outline-primary"
                           disabled={isSubmitting}
                         >
-                          {t("signup.registr")}
+                          {t('signup.registr')}
                         </button>
                       </Form>
                     )}
@@ -185,5 +185,5 @@ export const FormSignup = () => {
       </div>
       <ToastContainer />
     </>
-  );
-};
+  )
+}

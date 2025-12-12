@@ -1,18 +1,18 @@
-import React from "react";
-import rollbar from "./rollbar-config";
+import React from 'react'
+import rollbar from './rollbar-config'
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = { hasError: false };
+    super(props)
+    this.state = { hasError: false }
   }
 
   static getDerivedStateFromError() {
-    return { hasError: true };
+    return { hasError: true }
   }
 
   componentDidCatch(error, errorInfo) {
-    rollbar.error("React Error Boundary поймал ошибку", error, errorInfo);
+    rollbar.error('React Error Boundary поймал ошибку', error, errorInfo)
   }
 
   render() {
@@ -28,11 +28,11 @@ class ErrorBoundary extends React.Component {
             Обновить страницу
           </button>
         </div>
-      );
+      )
     }
 
-    return this.props.children;
+    return this.props.children
   }
 }
 
-export default ErrorBoundary;
+export default ErrorBoundary

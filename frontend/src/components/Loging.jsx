@@ -1,19 +1,19 @@
-import { Formik, Form, Field } from "formik";
-import logingImg from "../assets/images/loging.jpg";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import cn from "classnames";
-import { useDispatch } from "react-redux";
-import { actions as currentChatActions } from "../assets/slices/currentValueChatSlice";
-import rollbar from "../../rollbar-config";
-import { useTranslation } from "react-i18next";
-import { ToastContainer, toast } from "react-toastify";
-import { actions as authActions } from "../assets/slices/authSlice";
+import { Formik, Form, Field } from 'formik'
+import logingImg from '../assets/images/loging.jpg'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import cn from 'classnames'
+import { useDispatch } from 'react-redux'
+import { actions as currentChatActions } from '../assets/slices/currentValueChatSlice'
+import rollbar from '../../rollbar-config'
+import { useTranslation } from 'react-i18next'
+import { ToastContainer, toast } from 'react-toastify'
+import { actions as authActions } from '../assets/slices/authSlice'
 
 export const FormLoging = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   return (
     <>
@@ -34,58 +34,58 @@ export const FormLoging = () => {
                     <img
                       src={logingImg}
                       className="rounded-circle"
-                      alt={t("loging.entrance")}
+                      alt={t('loging.entrance')}
                     />
                   </div>
                   <div className="col-12 col-md-6 d-flex row justify-content-center align-content-center h-100">
                     <div className="col-12">
                       <h1 className="text-center mb-4">
-                        {t("loging.entrance")}
+                        {t('loging.entrance')}
                       </h1>
                       <Formik
                         initialValues={{
-                          username: "",
-                          password: "",
+                          username: '',
+                          password: '',
                           error: false,
                         }}
                         onSubmit={async (
                           values,
                           { setSubmitting, setFieldValue, resetForm },
                         ) => {
-                          setFieldValue("error", false);
+                          setFieldValue('error', false)
                           await axios
-                            .post("api/v1/login", values)
-                            .then((response) => {
-                              const { token, username } = response.data;
+                            .post('api/v1/login', values)
+                            .then(response => {
+                              const { token, username } = response.data
                               if (!token) {
-                                navigate("/login");
-                                setSubmitting(false);
+                                navigate('/login')
+                                setSubmitting(false)
                               } else {
-                                dispatch(authActions.loginSuccess({ token }));
+                                dispatch(authActions.loginSuccess({ token }))
                                 dispatch(
                                   currentChatActions.setCurrentUserName(
                                     username,
                                   ),
-                                );
-                                navigate("/");
-                                setSubmitting(false);
-                                resetForm();
+                                )
+                                navigate('/')
+                                setSubmitting(false)
+                                resetForm()
                               }
                             })
-                            .catch((error) => {
-                              console.log(error);
-                              console.log(error.response?.status);
+                            .catch(error => {
+                              console.log(error)
+                              console.log(error.response?.status)
                               if (!error.response) {
-                                toast.error(t("networkError"));
+                                toast.error(t('networkError'))
                                 rollbar.error(
-                                  "Ошибка отправки данных формы регистрации",
-                                );
+                                  'Ошибка отправки данных формы регистрации',
+                                )
                               }
 
                               if (error.response?.status === 401) {
-                                setFieldValue("error", true);
+                                setFieldValue('error', true)
                               }
-                            });
+                            })
                         }}
                       >
                         {({ isSubmitting, values }) => (
@@ -94,33 +94,33 @@ export const FormLoging = () => {
                               <Field
                                 name="username"
                                 required=""
-                                placeholder={t("loging.username")}
+                                placeholder={t('loging.username')}
                                 id="username"
-                                className={cn("form-control", {
-                                  "is-invalid": values.error,
+                                className={cn('form-control', {
+                                  'is-invalid': values.error,
                                 })}
                               />
                               <label htmlFor="username">
-                                {t("loging.username")}
+                                {t('loging.username')}
                               </label>
                             </div>
                             <div className="form-floating mb-4">
                               <Field
                                 name="password"
                                 required=""
-                                placeholder={t("loging.password")}
+                                placeholder={t('loging.password')}
                                 type="password"
                                 id="password"
-                                className={cn("form-control", {
-                                  "is-invalid": values.error,
+                                className={cn('form-control', {
+                                  'is-invalid': values.error,
                                 })}
                               />
                               <label className="form-label" htmlFor="password">
-                                {t("loging.password")}
+                                {t('loging.password')}
                               </label>
                               {values.error && (
                                 <div className="invalid-feedback">
-                                  {t("loging.invalidFeedback")}
+                                  {t('loging.invalidFeedback')}
                                 </div>
                               )}
                             </div>
@@ -129,7 +129,7 @@ export const FormLoging = () => {
                               className="w-100 mb-3 btn btn-outline-primary"
                               disabled={isSubmitting}
                             >
-                              {t("loging.entrance")}
+                              {t('loging.entrance')}
                             </button>
                           </Form>
                         )}
@@ -139,8 +139,8 @@ export const FormLoging = () => {
                 </div>
                 <div className="card-footer p-4">
                   <div className="text-center">
-                    <span>{t("loging.noAccount")} </span>
-                    <a href="/signup">{t("loging.signup")}</a>
+                    <span>{t('loging.noAccount')} </span>
+                    <a href="/signup">{t('loging.signup')}</a>
                   </div>
                 </div>
               </div>
@@ -150,5 +150,5 @@ export const FormLoging = () => {
       </div>
       <ToastContainer />
     </>
-  );
-};
+  )
+}

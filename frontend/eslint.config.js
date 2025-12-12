@@ -1,16 +1,17 @@
-import js from "@eslint/js";
-import globals from "globals";
-import reactPlugin from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
+import js from '@eslint/js'
+import globals from 'globals'
+import reactPlugin from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import stylistic from '@stylistic/eslint-plugin'
 
 export default [
-  // Базовые настройки
+
   js.configs.recommended,
   {
-    files: ["**/*.js", "**/*.jsx"],
+    files: ['**/*.js', '**/*.jsx'],
     languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
@@ -23,47 +24,59 @@ export default [
       },
     },
     plugins: {
-      react: reactPlugin,
-      "react-hooks": reactHooks,
+      'react': reactPlugin,
+      'react-hooks': reactHooks,
+      '@stylistic': stylistic,
     },
     rules: {
-      // Базовые правила
+    
       ...js.configs.recommended.rules,
       ...reactPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
+      
+    
+      '@stylistic/quotes': ['error', 'single'],
+      '@stylistic/semi': ['error', 'never'],
+      '@stylistic/arrow-parens': ['error', 'as-needed'],
+      '@stylistic/brace-style': ['error', '1tbs'],
+      '@stylistic/jsx-one-expression-per-line': 'off',
+      '@stylistic/jsx-closing-tag-location': 'off',
+      '@stylistic/multiline-ternary': 'off',
+      '@stylistic/operator-linebreak': 'off',
+      '@stylistic/quote-props': ['error', 'consistent-as-needed'],
 
-      // Кастомные правила
-      "react/prop-types": "off",
-      "react/react-in-jsx-scope": "off",
-      "import/extensions": "off",
-      "import/no-unresolved": "off",
-      "no-console": "off",
-      "no-underscore-dangle": [
-        "error",
+      // Ваши существующие правила
+      'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
+      'import/extensions': 'off',
+      'import/no-unresolved': 'off',
+      'no-console': 'off',
+      'no-underscore-dangle': [
+        'error',
         {
-          allow: ["__filename", "__dirname"],
+          allow: ['__filename', '__dirname'],
         },
       ],
-      "react/function-component-definition": [
-        "error",
+      'react/function-component-definition': [
+        'error',
         {
-          namedComponents: "arrow-function",
+          namedComponents: 'arrow-function',
         },
       ],
-      "react/jsx-filename-extension": [
-        "warn",
+      'react/jsx-filename-extension': [
+        'warn',
         {
-          extensions: [".js", ".jsx"],
+          extensions: ['.js', '.jsx'],
         },
       ],
     },
     settings: {
       react: {
-        version: "detect",
+        version: 'detect',
       },
     },
   },
   {
-    ignores: ["node_modules/**", "dist/**", "build/**"],
+    ignores: ['node_modules/**', 'dist/**', 'build/**'],
   },
-];
+]
