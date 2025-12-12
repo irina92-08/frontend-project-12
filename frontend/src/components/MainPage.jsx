@@ -38,7 +38,7 @@ const Channels = ({ data, currentChannel }) => {
             }}
           >
             <span className="me-1">#</span>
-            {channel.name}
+            {filter.clean(channel.name)}
           </button>
           <button
             type="button"
@@ -83,7 +83,7 @@ const Channels = ({ data, currentChannel }) => {
           }}
         >
           <span className="me-1">#</span>
-          {channel.name}
+          {filter.clean(channel.name)}
         </button>
       )}
     </li>
