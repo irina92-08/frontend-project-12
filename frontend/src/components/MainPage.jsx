@@ -20,11 +20,11 @@ const Channels = ({ data, currentChannel }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  const handleRenameClick = (channel) => {
+  const handleRenameClick = channel => {
     dispatch(modalActions.openRenameModal(channel))
   }
 
-  const channelList = data.map((channel) => (
+  const channelList = data.map(channel => (
     <li key={channel.id} className="nav-item w-100" id={channel.id}>
       {channel.id > 2 && (
         <div role="group" className="d-flex dropdown btn-group">
@@ -102,7 +102,7 @@ const Channels = ({ data, currentChannel }) => {
 const Messages = ({ data }) => {
   console.log(data)
 
-  const messagesList = data.map((massege) => {
+  const messagesList = data.map(massege => {
     return (
       <div className="text-break mb-2" key={massege.id}>
         <b>{massege.username}</b>:{massege.body}
@@ -144,7 +144,7 @@ export const MainPage = () => {
           axios.get('/api/v1/messages', { headers }),
         ])
 
-        const filteredChannels = channelsResponse.data.map((channel) => ({
+        const filteredChannels = channelsResponse.data.map(channel => ({
           ...channel,
           name: filter.clean(channel.name),
         }))
@@ -162,22 +162,22 @@ export const MainPage = () => {
 
     fetchData()
   }, [dispatch, t])
-  const dataChannels = useSelector((state) => state.channelsReducer)
-  const dataMessages = useSelector((state) => state.messagesReducer)
-  const modalOpen = useSelector((state) => state.modalReducer.activeModal)
+  const dataChannels = useSelector(state => state.channelsReducer)
+  const dataMessages = useSelector(state => state.messagesReducer)
+  const modalOpen = useSelector(state => state.modalReducer.activeModal)
 
-  const idChannel = useSelector((state) => state.currentChatReducer.idChannel)
+  const idChannel = useSelector(state => state.currentChatReducer.idChannel)
   const nameChannel = useSelector(
-    (state) => state.currentChatReducer.nameChannel,
+    state => state.currentChatReducer.nameChannel,
   )
 
   const currentDataMessages = dataMessages.messages.filter(
-    (message) => message.channelId === idChannel,
+    message => message.channelId === idChannel,
   )
 
-  const nameUser = useSelector((state) => state.currentChatReducer.userName)
+  const nameUser = useSelector(state => state.currentChatReducer.userName)
 
-  const handleSubmitMessage = (e) => {
+  const handleSubmitMessage = e => {
     e.preventDefault()
 
     const text = e.target.elements.body.value
@@ -201,7 +201,7 @@ export const MainPage = () => {
         },
       })
       .then(() => (e.target.elements.body.value = ''))
-      .catch((error) => {
+      .catch(error => {
         if (!error.response) {
           toast.error(t('networkError'))
           rollbar.error('Ошибка при отправке сообщения')
@@ -222,7 +222,7 @@ export const MainPage = () => {
     return
   }
 
-  const declensionWord = (num) => {
+  const declensionWord = num => {
     const numInWord = num.toString()
     if (numInWord.slice(-1) === '1' && numInWord.slice(-2) !== '11') {
       return `${num} сообщение`

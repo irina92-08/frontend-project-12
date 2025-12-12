@@ -7,11 +7,11 @@ import i18n from '../../../i18n'
 
 let socket = null
 
-export const socketMiddleware = (store) => (next) => (action) => {
+export const socketMiddleware = store => next => action => {
   if (!socket) {
     socket = io()
 
-    socket.on('connect_error', (error) => {
+    socket.on('connect_error', error => {
       console.error('Socket connection error:', error)
       toast.error(i18n.t('networkError'))
       rollbar.error('Ошибка соединения сокета')
@@ -30,21 +30,21 @@ export const socketMiddleware = (store) => (next) => (action) => {
     //   toast.warning('Соединение прервано');
     // });
 
-    socket.on('newMessage', (payload) => {
+    socket.on('newMessage', payload => {
       store.dispatch(messagesActions.addMessage(payload))
     })
 
-    socket.on('newChannel', (payload) => {
+    socket.on('newChannel', payload => {
       store.dispatch(channelsActions.addChannel(payload))
       console.log(payload) // { id: 6, name: "new channel", removable: true }
     })
 
-    socket.on('removeChannel', (payload) => {
+    socket.on('removeChannel', payload => {
       console.log(payload) // { id: 6 };
       store.dispatch(channelsActions.removeChannel(payload))
     })
 
-    socket.on('renameChannel', (payload) => {
+    socket.on('renameChannel', payload => {
       console.log(payload) // { id: 7, name: "new name channel", removable: true }
       store.dispatch(channelsActions.renameChannel(payload))
     })

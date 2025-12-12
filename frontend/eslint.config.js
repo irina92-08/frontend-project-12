@@ -32,23 +32,25 @@ export default [
       ...reactPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
 
-      // Все правила @stylistic которые есть в ошибках
       '@stylistic/quotes': ['error', 'single'],
       '@stylistic/semi': ['error', 'never'],
-      '@stylistic/arrow-parens': ['error', 'always'], // Изменено на 'always'
+      '@stylistic/arrow-parens': ['error', 'as-needed', {
+        requireForBlockBody: false
+      }],
+
       '@stylistic/brace-style': ['error', '1tbs'],
-      '@stylistic/jsx-one-expression-per-line': 'off', // Отключаем, так как не исправляется авто
-      '@stylistic/jsx-closing-tag-location': 'off', // Отключаем
-      '@stylistic/multiline-ternary': 'off', // Отключаем
-      '@stylistic/operator-linebreak': 'off', // Отключаем
-      '@stylistic/quote-props': ['error', 'consistent-as-needed'],
       '@stylistic/no-trailing-spaces': 'error',
       '@stylistic/no-multiple-empty-lines': ['error', { max: 1 }],
       '@stylistic/eol-last': ['error', 'always'],
       '@stylistic/spaced-comment': ['error', 'always'],
-      '@stylistic/indent': ['error', 2], // Добавлено правило для отступов
+      '@stylistic/indent': ['error', 2],
+      '@stylistic/quote-props': ['error', 'consistent-as-needed'],
 
-      // Ваши существующие правила
+      '@stylistic/jsx-one-expression-per-line': 'off',
+      '@stylistic/jsx-closing-tag-location': 'off',
+      '@stylistic/multiline-ternary': 'off',
+      '@stylistic/operator-linebreak': 'off',
+
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
       'import/extensions': 'off',
