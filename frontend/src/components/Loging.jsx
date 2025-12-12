@@ -55,7 +55,7 @@ export const FormLoging = () => {
                           setFieldValue('error', false)
                           await axios
                             .post('api/v1/login', values)
-                            .then(response => {
+                            .then((response) => {
                               const { token, username } = response.data
                               if (!token) {
                                 navigate('/login')
@@ -72,7 +72,7 @@ export const FormLoging = () => {
                                 resetForm()
                               }
                             })
-                            .catch(error => {
+                            .catch((error) => {
                               console.log(error)
                               console.log(error.response?.status)
                               if (!error.response) {

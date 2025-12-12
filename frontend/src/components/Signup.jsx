@@ -63,11 +63,11 @@ export const FormSignup = () => {
                     validationSchema={schema}
                     onSubmit={async (
                       values,
-                      { setSubmitting, setFieldError }, //resetForm - если нужна очистка формы
+                      { setSubmitting, setFieldError }, // resetForm - если нужна очистка формы
                     ) => {
                       await axios
                         .post('api/v1/signup', values)
-                        .then(response => {
+                        .then((response) => {
                           const { token, username } = response.data
 
                           dispatch(
@@ -77,7 +77,7 @@ export const FormSignup = () => {
                           navigate('/')
                           setSubmitting(false)
                         })
-                        .catch(error => {
+                        .catch((error) => {
                           console.log(error)
                           console.log(error.response?.status)
                           if (!error.response) {
@@ -156,10 +156,10 @@ export const FormSignup = () => {
                           />
                           {errors.confirmPassword &&
                             touched.confirmPassword && (
-                              <div className="invalid-tooltip">
-                                {errors.confirmPassword}
-                              </div>
-                            )}
+                            <div className="invalid-tooltip">
+                              {errors.confirmPassword}
+                            </div>
+                          )}
                           <label
                             className="form-label"
                             htmlFor="confirmPassword"
