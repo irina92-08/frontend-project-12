@@ -21,6 +21,7 @@ const resources = {
         message: "Введите сообщение...",
         newMessage: "Новое сообщение",
         send: "Отправить",
+        addSymbol: "+",
       },
       modal: {
         symbols: "от 3 до 20 символов",
