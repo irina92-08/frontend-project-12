@@ -143,8 +143,14 @@ export const MainPage = () => {
           axios.get("/api/v1/channels", { headers }),
           axios.get("/api/v1/messages", { headers }),
         ]);
-        console.log("messagesResponse.data", messagesResponse.data);
-        dispatch(channelsActions.setChannels(channelsResponse.data));
+
+        const filteredChannels = channelsResponse.data.map(channel => ({
+        ...channel,
+        name: filter.clean(channel.name)
+      }));
+      
+      dispatch(channelsActions.setChannels(filteredChannels));
+        
         dispatch(messagesActions.setMessages(messagesResponse.data));
       } catch (error) {
         if (!error.response) {
