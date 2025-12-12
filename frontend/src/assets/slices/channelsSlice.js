@@ -9,7 +9,11 @@ const channelsSlice = createSlice({
   initialState,
   reducers: {
     setChannels(state, { payload }) {
-      state.channels = payload;
+      const filteredChannels = payload.map((channel) => ({
+        ...channel,
+        name: filter.clean(channel.name),
+      }));
+      state.channels = filteredChannels;
     },
     addChannel(state, { payload }) {
       state.channels = [...state.channels, payload];
