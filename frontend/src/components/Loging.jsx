@@ -60,7 +60,8 @@ export const FormLoging = () => {
                               if (!token) {
                                 navigate('/login')
                                 setSubmitting(false)
-                              } else {
+                              } 
+                              else {
                                 dispatch(authActions.loginSuccess({ token }))
                                 dispatch(
                                   currentChatActions.setCurrentUserName(

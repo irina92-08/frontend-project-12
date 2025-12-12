@@ -76,11 +76,13 @@ const FormikModal = ({
 
           dispatch(modalActions.closeModal())
           resetForm()
-        } catch (error) {
+        } 
+        catch (error) {
           console.error(t('networkError'), error)
           toast.error(t('networkError'))
           setFieldValue('error', true)
-        } finally {
+        } 
+        finally {
           setSubmitting(false)
         }
       }}
@@ -149,7 +151,8 @@ const DeleteModal = ({ modalContext, channelId, dataChannels, onClose }) => {
       }
       toast.success(t('succesDelete'))
       dispatch(modalActions.closeModal())
-    } catch (error) {
+    } 
+    catch (error) {
       console.error(t('networkError'), error)
       toast.error(t('networkError'))
     }
@@ -246,25 +249,25 @@ export const Modal = () => {
             </button>
           </div>
           <div className="modal-body">
-            {statusModal === 'delete'
-              ? (
-                <DeleteModal
-                  modalContext={modalContext}
-                  channelId={channelId}
-                  dataChannels={dataChannels}
-                  onClose={handleCloseModal}
-                />
-              )
-              : (
-                <FormikModal
-                  initialValue={initialValue}
-                  modalContext={modalContext}
-                  statusModal={statusModal}
-                  channelId={channelId}
-                  dataChannels={dataChannels}
-                  onClose={handleCloseModal}
-                />
-              )}
+              {statusModal === 'delete'
+                ? (
+                  <DeleteModal
+                    modalContext={modalContext}
+                    channelId={channelId}
+                    dataChannels={dataChannels}
+                    onClose={handleCloseModal}
+                  />
+                )
+                : (
+                  <FormikModal
+                    initialValue={initialValue}
+                    modalContext={modalContext}
+                    statusModal={statusModal}
+                    channelId={channelId}
+                    dataChannels={dataChannels}
+                    onClose={handleCloseModal}
+                  />
+                )}
           </div>
         </div>
       </div>

@@ -154,7 +154,8 @@ export const MainPage = () => {
         dispatch(channelsActions.setChannels(filteredChannels))
 
         dispatch(messagesActions.setMessages(messagesResponse.data))
-      } catch (error) {
+      } 
+      catch (error) {
         if (!error.response) {
           toast.error(t('networkError'))
           rollbar.error('Ошибка получения данных')
@@ -231,7 +232,8 @@ export const MainPage = () => {
     }
     if (Number(numInWord.slice(-1)) > 1 && Number(numInWord.slice(-1)) < 5) {
       return `${num} сообщения`
-    } else {
+    } 
+    else {
       return `${num} сообщений`
     }
   }
