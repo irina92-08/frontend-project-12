@@ -14,6 +14,6 @@ export default configureStore({
     modalReducer,
     authReducer,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(socketMiddleware),
 })

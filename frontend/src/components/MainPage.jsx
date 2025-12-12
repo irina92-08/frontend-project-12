@@ -24,7 +24,7 @@ const Channels = ({ data, currentChannel }) => {
     dispatch(modalActions.openRenameModal(channel))
   }
 
-  const channelList = data.map((channel) => (
+  const channelList = data.map(channel => (
     <li key={channel.id} className="nav-item w-100" id={channel.id}>
       {channel.id > 2 && (
         <div role="group" className="d-flex dropdown btn-group">
@@ -144,7 +144,7 @@ export const MainPage = () => {
           axios.get('/api/v1/messages', { headers }),
         ])
 
-        const filteredChannels = channelsResponse.data.map((channel) => ({
+        const filteredChannels = channelsResponse.data.map(channel => ({
           ...channel,
           name: filter.clean(channel.name),
         }))
@@ -162,20 +162,20 @@ export const MainPage = () => {
 
     fetchData()
   }, [dispatch, t])
-  const dataChannels = useSelector((state) => state.channelsReducer)
-  const dataMessages = useSelector((state) => state.messagesReducer)
-  const modalOpen = useSelector((state) => state.modalReducer.activeModal)
+  const dataChannels = useSelector(state => state.channelsReducer)
+  const dataMessages = useSelector(state => state.messagesReducer)
+  const modalOpen = useSelector(state => state.modalReducer.activeModal)
 
-  const idChannel = useSelector((state) => state.currentChatReducer.idChannel)
+  const idChannel = useSelector(state => state.currentChatReducer.idChannel)
   const nameChannel = useSelector(
-    (state) => state.currentChatReducer.nameChannel,
+    state => state.currentChatReducer.nameChannel,
   )
 
   const currentDataMessages = dataMessages.messages.filter(
-    (message) => message.channelId === idChannel,
+    message => message.channelId === idChannel,
   )
 
-  const nameUser = useSelector((state) => state.currentChatReducer.userName)
+  const nameUser = useSelector(state => state.currentChatReducer.userName)
 
   const handleSubmitMessage = (e) => {
     e.preventDefault()

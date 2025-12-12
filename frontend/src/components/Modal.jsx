@@ -35,7 +35,7 @@ const FormikModal = ({
             }
             return true
           })
-          .map((channel) => channel.name)
+          .map(channel => channel.name)
 
         return !dataNames.includes(value)
       }),
@@ -143,7 +143,7 @@ const DeleteModal = ({ modalContext, channelId, dataChannels, onClose }) => {
 
       // Если удален текущий канал, переключаемся на первый доступный
       const channels = dataChannels.channels
-      const remainingChannels = channels.filter((ch) => ch.id !== channelId)
+      const remainingChannels = channels.filter(ch => ch.id !== channelId)
       if (remainingChannels.length > 0) {
         dispatch(currentChatActions.changeCurrentChannel(remainingChannels[0]))
       }
@@ -177,10 +177,10 @@ const DeleteModal = ({ modalContext, channelId, dataChannels, onClose }) => {
 export const Modal = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const modal = useSelector((state) => state.modalReducer)
+  const modal = useSelector(state => state.modalReducer)
   const { initialValue, statusModal, channelId } = modal
 
-  const dataChannels = useSelector((state) => state.channelsReducer)
+  const dataChannels = useSelector(state => state.channelsReducer)
 
   const modalContext = {
     modalTitle: '',

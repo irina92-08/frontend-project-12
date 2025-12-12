@@ -7,7 +7,7 @@ import i18n from '../../../i18n'
 
 let socket = null
 
-export const socketMiddleware = (store) => (next) => (action) => {
+export const socketMiddleware = store => next => (action) => {
   if (!socket) {
     socket = io()
 
