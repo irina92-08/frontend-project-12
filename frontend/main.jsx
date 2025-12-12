@@ -5,7 +5,7 @@ import "bootstrap";
 import { Provider } from "react-redux";
 import store from "./src/assets/slices/index.js";
 import { i18nInit } from "./i18n";
-import rollbar from "./rollbar-config.js";
+
 import ErrorBoundary from "./ErrorBoundary";
 
 const initApp = async () => {
