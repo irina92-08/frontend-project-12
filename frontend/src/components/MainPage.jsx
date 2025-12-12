@@ -119,19 +119,19 @@ const Messages = ({ data }) => {
 export const MainPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
-  useEffect(() => {
-    const initFilter = () => {
-      const currentLang = i18n.language;
-      const langCode = currentLang.split("-")[0];
-      filter.loadDictionary(langCode);
-    };
+  // useEffect(() => {
+  //   const initFilter = () => {
+  //     const currentLang = i18n.language;
+  //     const langCode = currentLang.split("-")[0];
+  //     filter.loadDictionary(langCode);
+  //   };
 
-    initFilter();
+  //   initFilter();
 
-    i18n.on("languageChanged", initFilter);
-  }, [i18n]);
+  //   i18n.on("languageChanged", initFilter);
+  // }, [i18n]);
 
   useEffect(() => {
     const fetchData = async () => {
