@@ -3,16 +3,19 @@ import { FormLoging } from "../components/Loging";
 import { MainPage } from "../components/MainPage";
 import { NotFound } from "../components/NotFound";
 import { FormSignup } from "../components/Signup";
+import { useSelector } from "react-redux";
 
 const App = () => {
-  const token = localStorage.getItem("token");
+  const { isAuthenticated } = useSelector((state) => state.authReducer);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="/"
-          element={token ? <MainPage /> : <Navigate to="/login" replace />}
+          element={
+            isAuthenticated ? <MainPage /> : <Navigate to="/login" replace />
+          }
         />
         <Route path="/login" element={<FormLoging />} />
         <Route path="/signup" element={<FormSignup />} />

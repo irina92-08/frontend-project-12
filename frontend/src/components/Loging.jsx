@@ -8,6 +8,7 @@ import { actions as currentChatActions } from "../assets/slices/currentValueChat
 import rollbar from "../../rollbar-config";
 import { useTranslation } from "react-i18next";
 import { ToastContainer, toast } from "react-toastify";
+import { actions as authActions } from "../assets/slices/authSlice";
 
 export const FormLoging = () => {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ export const FormLoging = () => {
                                 navigate("/login");
                                 setSubmitting(false);
                               } else {
-                                localStorage.setItem("token", token);
+                                dispatch(authActions.loginSuccess({ token }));
                                 dispatch(
                                   currentChatActions.setCurrentUserName(
                                     username,

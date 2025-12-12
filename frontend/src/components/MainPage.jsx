@@ -3,6 +3,7 @@ import { actions as channelsActions } from "../assets/slices/channelsSlice";
 import { actions as messagesActions } from "../assets/slices/messagesSlice";
 import { actions as modalActions } from "../assets/slices/modalSlice";
 import { actions as currentChatActions } from "../assets/slices/currentValueChatSlice";
+import { actions as authActions } from "../assets/slices/authSlice";
 import { Modal } from "./Modal";
 import cn from "classnames";
 import { useDispatch } from "react-redux";
@@ -210,7 +211,7 @@ export const MainPage = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    dispatch(authActions.logout());
     navigate("/login");
     return;
   };

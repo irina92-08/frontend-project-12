@@ -4,6 +4,7 @@ import messagesReducer from "./messagesSlice";
 import currentChatReducer from "./currentValueChatSlice";
 import { socketMiddleware } from "../middleware/socketMiddleware";
 import modalReducer from "./modalSlice";
+import authReducer from "./authSlice";
 
 export default configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export default configureStore({
     messagesReducer,
     currentChatReducer,
     modalReducer,
+    authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(socketMiddleware),

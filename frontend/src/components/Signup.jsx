@@ -3,6 +3,7 @@ import signupImg from "../assets/images/signup.jpg";
 import * as yup from "yup";
 import cn from "classnames";
 import { actions as currentChatActions } from "../assets/slices/currentValueChatSlice";
+import { actions as authActions } from "../assets/slices/authSlice";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -69,10 +70,10 @@ export const FormSignup = () => {
                         .then((response) => {
                           const { token, username } = response.data;
 
-                          localStorage.setItem("token", token);
                           dispatch(
                             currentChatActions.setCurrentUserName(username),
                           );
+                          dispatch(authActions.loginSuccess({ token }));
                           navigate("/");
                           setSubmitting(false);
                         })
@@ -144,7 +145,6 @@ export const FormSignup = () => {
                           <Field
                             placeholder={t("signup.mastMutch")}
                             name="confirmPassword"
-                            //   required=""
                             autoComplete="new-password"
                             type="password"
                             id="confirmPassword"
