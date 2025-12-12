@@ -76,12 +76,12 @@ const FormikModal = ({
 
           dispatch(modalActions.closeModal())
           resetForm()
-        } 
+        }
         catch (error) {
           console.error(t('networkError'), error)
           toast.error(t('networkError'))
           setFieldValue('error', true)
-        } 
+        }
         finally {
           setSubmitting(false)
         }
@@ -151,7 +151,7 @@ const DeleteModal = ({ modalContext, channelId, dataChannels, onClose }) => {
       }
       toast.success(t('succesDelete'))
       dispatch(modalActions.closeModal())
-    } 
+    }
     catch (error) {
       console.error(t('networkError'), error)
       toast.error(t('networkError'))
@@ -249,8 +249,8 @@ export const Modal = () => {
             </button>
           </div>
           <div className="modal-body">
-              {statusModal === 'delete'
-                ? (
+            {statusModal === 'delete'
+              ? (
                   <DeleteModal
                     modalContext={modalContext}
                     channelId={channelId}
@@ -258,7 +258,7 @@ export const Modal = () => {
                     onClose={handleCloseModal}
                   />
                 )
-                : (
+              : (
                   <FormikModal
                     initialValue={initialValue}
                     modalContext={modalContext}

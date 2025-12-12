@@ -60,7 +60,7 @@ export const FormLoging = () => {
                               if (!token) {
                                 navigate('/login')
                                 setSubmitting(false)
-                              } 
+                              }
                               else {
                                 dispatch(authActions.loginSuccess({ token }))
                                 dispatch(

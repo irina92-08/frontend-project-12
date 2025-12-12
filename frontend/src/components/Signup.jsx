@@ -86,7 +86,8 @@ export const FormSignup = () => {
                           }
                           if (error.response?.status === 409) {
                             setFieldError('username', t('signup.userExists'))
-                          } else {
+                          }
+                          else {
                             setFieldError(
                               'form',
                               t('signup.errorRegistration'),
