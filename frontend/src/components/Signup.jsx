@@ -150,12 +150,12 @@ export const FormSignup = () => {
                             id="confirmPassword"
                             className={cn('form-control', {
                               'is-invalid':
-                                errors.confirmPassword &&
-                                touched.confirmPassword,
+                                errors.confirmPassword
+                                && touched.confirmPassword,
                             })}
                           />
-                          {errors.confirmPassword &&
-                            touched.confirmPassword && (
+                          {errors.confirmPassword
+                            && touched.confirmPassword && (
                             <div className="invalid-tooltip">
                               {errors.confirmPassword}
                             </div>

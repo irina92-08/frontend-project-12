@@ -105,7 +105,9 @@ const Messages = ({ data }) => {
   const messagesList = data.map((massege) => {
     return (
       <div className="text-break mb-2" key={massege.id}>
-        <b>{massege.username}</b>:{massege.body}
+        <b>{massege.username}</b>
+        :
+        {massege.body}
       </div>
     )
   })
@@ -285,7 +287,10 @@ export const MainPage = () => {
               <div className="d-flex flex-column h-100">
                 <div className="bg-light mb-4 p-3 shadow-sm small">
                   <p className="m-0">
-                    <b># {nameChannel} </b>
+                    <b>
+                      #
+                      {nameChannel}
+                    </b>
                   </p>
                   <span className="text-muted">
                     {declensionWord(currentDataMessages.length)}

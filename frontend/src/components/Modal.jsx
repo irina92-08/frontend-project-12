@@ -242,26 +242,29 @@ export const Modal = () => {
               data-bs-dismiss="modal"
               className="btn btn-close"
               onClick={handleCloseModal}
-            ></button>
+            >
+            </button>
           </div>
           <div className="modal-body">
-            {statusModal === 'delete' ? (
-              <DeleteModal
-                modalContext={modalContext}
-                channelId={channelId}
-                dataChannels={dataChannels}
-                onClose={handleCloseModal}
-              />
-            ) : (
-              <FormikModal
-                initialValue={initialValue}
-                modalContext={modalContext}
-                statusModal={statusModal}
-                channelId={channelId}
-                dataChannels={dataChannels}
-                onClose={handleCloseModal}
-              />
-            )}
+            {statusModal === 'delete'
+              ? (
+                <DeleteModal
+                  modalContext={modalContext}
+                  channelId={channelId}
+                  dataChannels={dataChannels}
+                  onClose={handleCloseModal}
+                />
+              )
+              : (
+                <FormikModal
+                  initialValue={initialValue}
+                  modalContext={modalContext}
+                  statusModal={statusModal}
+                  channelId={channelId}
+                  dataChannels={dataChannels}
+                  onClose={handleCloseModal}
+                />
+              )}
           </div>
         </div>
       </div>

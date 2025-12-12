@@ -23,7 +23,9 @@ const channelsSlice = createSlice({
     renameChannel(state, { payload }) {
       const newName = payload.name
       state.channels = state.channels.map(channel =>
-        channel.id === payload.id ? { ...channel, name: newName } : channel,
+        channel.id === payload.id
+          ? { ...channel, name: newName }
+          : channel,
       )
     },
   },

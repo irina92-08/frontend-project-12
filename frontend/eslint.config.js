@@ -32,17 +32,11 @@ export default [
       ...reactPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
 
-      // Правила @stylistic
       '@stylistic/quotes': ['error', 'single'],
       '@stylistic/semi': ['error', 'never'],
-
-      // ИСПРАВЛЕНО: Правило для стрелочных функций
-      // 'as-needed' - скобки только когда нужно
-      // requireForBlockBody: true - если тело в фигурных скобках, то скобки обязательны
       '@stylistic/arrow-parens': ['error', 'as-needed', {
         requireForBlockBody: true,
       }],
-
       '@stylistic/brace-style': ['error', '1tbs'],
       '@stylistic/no-trailing-spaces': 'error',
       '@stylistic/no-multiple-empty-lines': ['error', { max: 1 }],
@@ -52,13 +46,11 @@ export default [
       '@stylistic/quote-props': ['error', 'consistent-as-needed'],
       '@stylistic/comma-dangle': ['error', 'always-multiline'],
 
-      // ОТКЛЮЧАЕМ правила, которые не исправляются автоматически
-      '@stylistic/jsx-one-expression-per-line': 'off',
-      '@stylistic/jsx-closing-tag-location': 'off',
-      '@stylistic/multiline-ternary': 'off',
-      '@stylistic/operator-linebreak': 'off',
+      '@stylistic/jsx-one-expression-per-line': ['error', { allow: 'single-child' }],
+      '@stylistic/jsx-closing-tag-location': 'error',
+      '@stylistic/multiline-ternary': ['error', 'always'],
+      '@stylistic/operator-linebreak': ['error', 'before'],
 
-      // Ваши существующие правила
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
       'import/extensions': 'off',

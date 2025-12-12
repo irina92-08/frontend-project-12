@@ -139,7 +139,10 @@ export const FormLoging = () => {
                 </div>
                 <div className="card-footer p-4">
                   <div className="text-center">
-                    <span>{t('loging.noAccount')} </span>
+                    <span>
+                      {t('loging.noAccount')}
+                      {' '}
+                    </span>
                     <a href="/signup">{t('loging.signup')}</a>
                   </div>
                 </div>

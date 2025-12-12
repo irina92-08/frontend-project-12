@@ -22,7 +22,10 @@ export const NotFound = () => {
         <h1 className="h4 text-muted">{t('notFound.notFoundText')}</h1>
         <p className="text-muted">
           {t('notFound.text')}
-          <a href="/"> {t('notFound.mainPageLink')}</a>
+          <a href="/">
+            {' '}
+            {t('notFound.mainPageLink')}
+          </a>
         </p>
       </div>
     </div>
