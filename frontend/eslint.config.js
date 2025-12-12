@@ -34,9 +34,13 @@ export default [
 
       '@stylistic/quotes': ['error', 'single'],
       '@stylistic/semi': ['error', 'never'],
-      '@stylistic/arrow-parens': ['error', 'as-needed', {
-        requireForBlockBody: true,
-      }],
+      '@stylistic/arrow-parens': [
+        'error',
+        'as-needed',
+        {
+          requireForBlockBody: true,
+        },
+      ],
       '@stylistic/brace-style': ['error', '1tbs'],
       '@stylistic/no-trailing-spaces': 'error',
       '@stylistic/no-multiple-empty-lines': ['error', { max: 1 }],
@@ -46,7 +50,10 @@ export default [
       '@stylistic/quote-props': ['error', 'consistent-as-needed'],
       '@stylistic/comma-dangle': ['error', 'always-multiline'],
 
-      '@stylistic/jsx-one-expression-per-line': ['error', { allow: 'single-child' }],
+      '@stylistic/jsx-one-expression-per-line': [
+        'error',
+        { allow: 'single-child' },
+      ],
       '@stylistic/jsx-closing-tag-location': 'error',
       '@stylistic/multiline-ternary': ['error', 'always'],
       '@stylistic/operator-linebreak': ['error', 'before'],
