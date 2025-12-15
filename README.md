@@ -103,7 +103,7 @@ Complex forms are handled using Formik with Yup validation schemas:
 
 ## 🌐 Localization
 
-The application supports multiple languages through react-i18next with translations organized by page and component.
+The i18n system is implemented through react-i18next with translations organized by pages and components. Currently, only Russian language is supported, but the architecture allows for easy addition of new languages.
 
 ## ⚠️ Error Handling
 

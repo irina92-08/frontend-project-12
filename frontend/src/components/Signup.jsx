@@ -22,7 +22,7 @@ export const FormSignup = () => {
     confirmPassword: '',
   }
 
-  const onSubmit = async(values, formikHelpers) => {
+  const onSubmit = async (values, formikHelpers) => {
     const { setSubmitting, setFieldError } = formikHelpers
     await axios
       .post('api/v1/signup', values)
@@ -43,7 +43,8 @@ export const FormSignup = () => {
         }
         if (error.response?.status === 409) {
           setFieldError('username', t('signup.userExists'))
-        } else {
+        }
+        else {
           setFieldError(
             'form',
             t('signup.errorRegistration'),
@@ -75,7 +76,7 @@ export const FormSignup = () => {
                     validateOnBlur={false}
                     validationSchema={authSchema(t)}
                     onSubmit={async (values, formikHelpers) => {
-                      onSubmit(values,formikHelpers)
+                      onSubmit(values, formikHelpers)
                     }}
                   >
                     {({ errors, isSubmitting, handleSubmit, touched }) => (
@@ -84,7 +85,8 @@ export const FormSignup = () => {
                           {t('signup.registration')}
                         </h1>
                         <div className="form-floating mb-3">
-                          <Field autoFocus
+                          <Field
+                            autoFocus
                             placeholder={t('signup.symbols')}
                             name="username"
                             autoComplete="username"

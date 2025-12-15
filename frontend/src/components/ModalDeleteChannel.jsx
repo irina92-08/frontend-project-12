@@ -25,7 +25,8 @@ export const ModalDeleteChannel = ({ modalContext, channelId, dataChannels, onCl
       }
       toast.success(t('succesDelete'))
       dispatch(modalActions.closeModal())
-    } catch (error) {
+    }
+    catch (error) {
       console.error(t('networkError'), error)
       toast.error(t('networkError'))
     }

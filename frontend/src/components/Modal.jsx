@@ -76,23 +76,23 @@ export const Modal = () => {
           <div className="modal-body">
             {statusModal === 'delete'
               ? (
-                <ModalDeleteChannel
-                  modalContext={modalContext}
-                  channelId={channelId}
-                  dataChannels={dataChannels}
-                  onClose={handleCloseModal}
-                />
-              )
+                  <ModalDeleteChannel
+                    modalContext={modalContext}
+                    channelId={channelId}
+                    dataChannels={dataChannels}
+                    onClose={handleCloseModal}
+                  />
+                )
               : (
-                <ModalAddRenameChannel
-                  initialValue={initialValue}
-                  modalContext={modalContext}
-                  statusModal={statusModal}
-                  dataChannels={dataChannels}
-                  channelId={channelId}
-                  onClose={handleCloseModal}
-                />
-              )}
+                  <ModalAddRenameChannel
+                    initialValue={initialValue}
+                    modalContext={modalContext}
+                    statusModal={statusModal}
+                    dataChannels={dataChannels}
+                    channelId={channelId}
+                    onClose={handleCloseModal}
+                  />
+                )}
           </div>
         </div>
       </div>

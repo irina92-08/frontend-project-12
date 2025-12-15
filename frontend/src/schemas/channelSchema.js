@@ -1,6 +1,6 @@
 import * as yup from 'yup'
 
-export const channelSchema = (t, channelId, dataChannels,statusModal) => yup.object().shape({
+export const channelSchema = (t, channelId, dataChannels, statusModal) => yup.object().shape({
   name: yup
     .string()
     .min(3, t('modal.symbols'))

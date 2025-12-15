@@ -47,14 +47,15 @@ export const ModalAddRenameChannel = ({
       if (statusModal === 'rename') {
         toast.success(t('succesRename'))
       }
-
       dispatch(modalActions.closeModal())
       resetForm()
-    } catch (error) {
+    }
+    catch (error) {
       console.error(t('networkError'), error)
       toast.error(t('networkError'))
       setFieldValue('error', true)
-    } finally {
+    }
+    finally {
       setSubmitting(false)
     }
   }
