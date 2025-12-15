@@ -1,5 +1,5 @@
 import React from 'react'
-import rollbar from './rollbar-config'
+import rollbar from '../rollbar-config'
 
 class ErrorBoundary extends React.Component {
   constructor(props) {

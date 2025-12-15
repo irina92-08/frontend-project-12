@@ -9,22 +9,59 @@ import rollbar from '../../rollbar-config'
 import { useTranslation } from 'react-i18next'
 import { ToastContainer, toast } from 'react-toastify'
 import { actions as authActions } from '../assets/slices/authSlice'
+import { Header } from './Header'
 
 export const FormLoging = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
+  const initForm = {
+    username: '',
+    password: '',
+    error: false,
+  }
+
+  const onSubmit = async (values, formikHelpers) => {
+    const { setSubmitting, setFieldValue, resetForm } = formikHelpers
+    setFieldValue('error', false)
+    await axios
+      .post('api/v1/login', values)
+      .then((response) => {
+        const { token, username } = response.data
+        if (!token) {
+          navigate('/login')
+          setSubmitting(false)
+        } else {
+          dispatch(authActions.loginSuccess({ token }))
+          dispatch(
+            currentChatActions.setCurrentUserName(
+              username,
+            ),
+          )
+          navigate('/')
+          setSubmitting(false)
+          resetForm()
+        }
+      })
+      .catch((error) => {
+        if (!error.response) {
+          toast.error(t('networkError'))
+          rollbar.error(
+            'Ошибка отправки данных формы регистрации',
+          )
+        }
+
+        if (error.response?.status === 401) {
+          setFieldValue('error', true)
+        }
+      })
+  }
+
   return (
     <>
       <div className="d-flex flex-column h-100">
-        <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-          <div className="container">
-            <a className="navbar-brand" href="/login">
-              Hexlet Chat
-            </a>
-          </div>
-        </nav>
+        <Header />
         <div className="container-fluid h-100">
           <div className="row justify-content-center align-content-center h-100">
             <div className="col-12 col-md-8 col-xxl-6">
@@ -43,56 +80,13 @@ export const FormLoging = () => {
                         {t('loging.entrance')}
                       </h1>
                       <Formik
-                        initialValues={{
-                          username: '',
-                          password: '',
-                          error: false,
-                        }}
-                        onSubmit={async (
-                          values,
-                          { setSubmitting, setFieldValue, resetForm },
-                        ) => {
-                          setFieldValue('error', false)
-                          await axios
-                            .post('api/v1/login', values)
-                            .then((response) => {
-                              const { token, username } = response.data
-                              if (!token) {
-                                navigate('/login')
-                                setSubmitting(false)
-                              }
-                              else {
-                                dispatch(authActions.loginSuccess({ token }))
-                                dispatch(
-                                  currentChatActions.setCurrentUserName(
-                                    username,
-                                  ),
-                                )
-                                navigate('/')
-                                setSubmitting(false)
-                                resetForm()
-                              }
-                            })
-                            .catch((error) => {
-                              console.log(error)
-                              console.log(error.response?.status)
-                              if (!error.response) {
-                                toast.error(t('networkError'))
-                                rollbar.error(
-                                  'Ошибка отправки данных формы регистрации',
-                                )
-                              }
-
-                              if (error.response?.status === 401) {
-                                setFieldValue('error', true)
-                              }
-                            })
-                        }}
+                        initialValues={initForm}
+                        onSubmit={(values, formikHelpers) => onSubmit(values, formikHelpers)}
                       >
                         {({ isSubmitting, values }) => (
                           <Form autoComplete="off">
                             <div className="form-floating mb-3">
-                              <Field
+                              <Field autoFocus
                                 name="username"
                                 required=""
                                 placeholder={t('loging.username')}

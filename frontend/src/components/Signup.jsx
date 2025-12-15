@@ -1,6 +1,5 @@
 import { Formik, Form, Field } from 'formik'
 import signupImg from '../assets/images/signup.jpg'
-import * as yup from 'yup'
 import cn from 'classnames'
 import { actions as currentChatActions } from '../assets/slices/currentValueChatSlice'
 import { actions as authActions } from '../assets/slices/authSlice'
@@ -9,37 +8,55 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ToastContainer, toast } from 'react-toastify'
+import { Header } from './Header'
+import { authSchema } from '../schemas/authSchema'
 
 export const FormSignup = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const schema = yup.object().shape({
-    username: yup
-      .string()
-      .min(3, t('signup.symbols'))
-      .max(20, t('signup.symbols'))
-      .required(t('signup.require')),
 
-    password: yup
-      .string()
-      .min(6, t('signup.symbolsPassword'))
-      .required(t('signup.require')),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref('password'), null], t('signup.mastMutch')),
-  })
+  const initForm = {
+    username: '',
+    password: '',
+    confirmPassword: '',
+  }
+
+  const onSubmit = async(values, formikHelpers) => {
+    const { setSubmitting, setFieldError } = formikHelpers
+    await axios
+      .post('api/v1/signup', values)
+      .then((response) => {
+        const { token, username } = response.data
+
+        dispatch(
+          currentChatActions.setCurrentUserName(username),
+        )
+        dispatch(authActions.loginSuccess({ token }))
+        navigate('/')
+        setSubmitting(false)
+      })
+      .catch((error) => {
+        if (!error.response) {
+          toast.error(t('networkError'))
+          setFieldError('form', t('networkError'))
+        }
+        if (error.response?.status === 409) {
+          setFieldError('username', t('signup.userExists'))
+        } else {
+          setFieldError(
+            'form',
+            t('signup.errorRegistration'),
+          )
+        }
+        setSubmitting(false)
+      })
+  }
 
   return (
     <>
       <div className="d-flex flex-column h-100">
-        <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-          <div className="container">
-            <a className="navbar-brand" href="/login">
-              Hexlet Chat
-            </a>
-          </div>
-        </nav>
+        <Header />
         <div className="container-fluid h-100">
           <div className="row justify-content-center align-content-center h-100">
             <div className="col-12 col-md-8 col-xxl-6">
@@ -53,48 +70,12 @@ export const FormSignup = () => {
                     />
                   </div>
                   <Formik
-                    initialValues={{
-                      username: '',
-                      password: '',
-                      confirmPassword: '',
-                    }}
+                    initialValues={initForm}
                     validateOnChange={true}
                     validateOnBlur={false}
-                    validationSchema={schema}
-                    onSubmit={async (
-                      values,
-                      { setSubmitting, setFieldError }, // resetForm - если нужна очистка формы
-                    ) => {
-                      await axios
-                        .post('api/v1/signup', values)
-                        .then((response) => {
-                          const { token, username } = response.data
-
-                          dispatch(
-                            currentChatActions.setCurrentUserName(username),
-                          )
-                          dispatch(authActions.loginSuccess({ token }))
-                          navigate('/')
-                          setSubmitting(false)
-                        })
-                        .catch((error) => {
-                          console.log(error)
-                          console.log(error.response?.status)
-                          if (!error.response) {
-                            toast.error(t('networkError'))
-                            setFieldError('form', t('networkError'))
-                          }
-                          if (error.response?.status === 409) {
-                            setFieldError('username', t('signup.userExists'))
-                          }
-                          else {
-                            setFieldError(
-                              'form',
-                              t('signup.errorRegistration'),
-                            )
-                          }
-                          setSubmitting(false)
-                        })
+                    validationSchema={authSchema(t)}
+                    onSubmit={async (values, formikHelpers) => {
+                      onSubmit(values,formikHelpers)
                     }}
                   >
                     {({ errors, isSubmitting, handleSubmit, touched }) => (
@@ -103,7 +84,7 @@ export const FormSignup = () => {
                           {t('signup.registration')}
                         </h1>
                         <div className="form-floating mb-3">
-                          <Field
+                          <Field autoFocus
                             placeholder={t('signup.symbols')}
                             name="username"
                             autoComplete="username"

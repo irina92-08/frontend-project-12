@@ -55,6 +55,7 @@ const resources = {
         confirm: 'Подтвердите пароль',
         registr: 'Зарегистрироваться',
       },
+      unknownRequest: 'Неизвестный запрос',
       networkError: 'Ошибка соединения',
       succesAdd: 'Канал создан',
       succesRename: 'Канал переименован',

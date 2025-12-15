@@ -3,7 +3,7 @@ import { actions as messagesActions } from '../slices/messagesSlice'
 import { actions as channelsActions } from '../slices/channelsSlice'
 import { toast } from 'react-toastify'
 import rollbar from '../../../rollbar-config'
-import i18n from '../../../i18n'
+import i18n from '../../i18n'
 
 let socket = null
 

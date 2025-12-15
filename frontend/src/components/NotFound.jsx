@@ -1,18 +1,12 @@
 import notFoundImg from '../assets/images/404.svg'
 import { useTranslation } from 'react-i18next'
+import { Header } from './Header'
 
 export const NotFound = () => {
   const { t } = useTranslation()
   return (
     <div className="d-flex flex-column h-100">
-      <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-        <div className="container">
-          <a className="navbar-brand" href="/login">
-            Hexlet Chat
-          </a>
-        </div>
-      </nav>
-
+      <Header />
       <div className="text-center">
         <img
           alt={t('notFound.notFoundText')}

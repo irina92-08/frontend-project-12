@@ -2,138 +2,21 @@ import axios from 'axios'
 import { actions as channelsActions } from '../assets/slices/channelsSlice'
 import { actions as messagesActions } from '../assets/slices/messagesSlice'
 import { actions as modalActions } from '../assets/slices/modalSlice'
-import { actions as currentChatActions } from '../assets/slices/currentValueChatSlice'
-import { actions as authActions } from '../assets/slices/authSlice'
 import { Modal } from './Modal'
-import cn from 'classnames'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ToastContainer, toast } from 'react-toastify'
 import rollbar from '../../rollbar-config'
-
+import { Channels } from './Channels'
+import { Messages } from './Messages'
 import filter from 'leo-profanity'
-
-const Channels = ({ data, currentChannel }) => {
-  const dispatch = useDispatch()
-  const { t } = useTranslation()
-
-  const handleRenameClick = (channel) => {
-    dispatch(modalActions.openRenameModal(channel))
-  }
-
-  const channelList = data.map(channel => (
-    <li key={channel.id} className="nav-item w-100" id={channel.id}>
-      {channel.id > 2 && (
-        <div role="group" className="d-flex dropdown btn-group">
-          <button
-            type="button"
-            className={cn('w-100 rounded-0 text-start btn text-truncate', {
-              'btn-secondary': channel.id === currentChannel,
-            })}
-            onClick={() => {
-              dispatch(currentChatActions.changeCurrentChannel(channel))
-            }}
-          >
-            <span className="me-1">#</span>
-            {filter.clean(channel.name)}
-          </button>
-          <button
-            type="button"
-            id={channel.id}
-            aria-expanded="true"
-            data-bs-toggle="dropdown"
-            className=" dropdown-toggle dropdown-toggle-split btn"
-          >
-            <span className="visually-hidden">
-              {t('mainPage.managementChannel')}
-            </span>
-          </button>
-          <div
-            aria-labelledby={channel.id}
-            className="dropdown-menu dropdown-menu-end"
-          >
-            <a
-              className="dropdown-item"
-              role="button"
-              onClick={() => dispatch(modalActions.openDeleteModal(channel))}
-            >
-              {t('mainPage.delete')}
-            </a>
-            <a
-              className="dropdown-item"
-              role="button"
-              onClick={() => handleRenameClick(channel)}
-            >
-              {t('mainPage.rename')}
-            </a>
-          </div>
-        </div>
-      )}
-      {channel.id < 3 && (
-        <button
-          type="button"
-          className={cn('w-100 rounded-0 text-start btn', {
-            'btn-secondary': channel.id === currentChannel,
-          })}
-          onClick={() => {
-            dispatch(currentChatActions.changeCurrentChannel(channel))
-          }}
-        >
-          <span className="me-1">#</span>
-          {filter.clean(channel.name)}
-        </button>
-      )}
-    </li>
-  ))
-
-  return (
-    <ul
-      id="channels-box"
-      className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block"
-    >
-      {channelList}
-    </ul>
-  )
-}
-
-const Messages = ({ data }) => {
-  console.log(data)
-
-  const messagesList = data.map((massege) => {
-    return (
-      <div className="text-break mb-2" key={massege.id}>
-        <b>{massege.username}</b>
-        :
-        {massege.body}
-      </div>
-    )
-  })
-  return (
-    <div id="messages-box" className="chat-messages overflow-auto px-5 ">
-      {messagesList}
-    </div>
-  )
-}
+import { Header } from './Header'
 
 export const MainPage = () => {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   const { t } = useTranslation()
-
-  // useEffect(() => {
-  //   const initFilter = () => {
-  //     const currentLang = i18n.language;
-  //     const langCode = currentLang.split("-")[0];
-  //     filter.loadDictionary(langCode);
-  //   };
-
-  //   initFilter();
-
-  //   i18n.on("languageChanged", initFilter);
-  // }, [i18n]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,48 +28,38 @@ export const MainPage = () => {
           axios.get('/api/v1/channels', { headers }),
           axios.get('/api/v1/messages', { headers }),
         ])
-
         const filteredChannels = channelsResponse.data.map(channel => ({
           ...channel,
           name: filter.clean(channel.name),
         }))
-
         dispatch(channelsActions.setChannels(filteredChannels))
-
         dispatch(messagesActions.setMessages(messagesResponse.data))
-      }
-      catch (error) {
+      } catch (error) {
         if (!error.response) {
           toast.error(t('networkError'))
           rollbar.error('Ошибка получения данных')
         }
       }
     }
-
     fetchData()
   }, [dispatch, t])
+
   const dataChannels = useSelector(state => state.channelsReducer)
   const dataMessages = useSelector(state => state.messagesReducer)
   const modalOpen = useSelector(state => state.modalReducer.activeModal)
-
   const idChannel = useSelector(state => state.currentChatReducer.idChannel)
   const nameChannel = useSelector(
     state => state.currentChatReducer.nameChannel,
   )
-
   const currentDataMessages = dataMessages.messages.filter(
     message => message.channelId === idChannel,
   )
-
   const nameUser = useSelector(state => state.currentChatReducer.userName)
 
   const handleSubmitMessage = (e) => {
     e.preventDefault()
-
     const text = e.target.elements.body.value
-
     const newText = filter.clean(text)
-
     const button = e.target.querySelector('button[type="submit"]')
     button.disabled = true
 
@@ -219,12 +92,6 @@ export const MainPage = () => {
     dispatch(modalActions.openModal())
   }
 
-  const handleLogout = () => {
-    dispatch(authActions.logout())
-    navigate('/login')
-    return
-  }
-
   const declensionWord = (num) => {
     const numInWord = num.toString()
     if (numInWord.slice(-1) === '1' && numInWord.slice(-2) !== '11') {
@@ -232,28 +99,14 @@ export const MainPage = () => {
     }
     if (Number(numInWord.slice(-1)) > 1 && Number(numInWord.slice(-1)) < 5) {
       return `${num} сообщения`
-    }
-    else {
+    } else {
       return `${num} сообщений`
     }
   }
   return (
     <>
       <div className="d-flex flex-column h-100">
-        <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-          <div className="container">
-            <a className="navbar-brand" href="/">
-              Hexlet Chat
-            </a>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleLogout}
-            >
-              {t('mainPage.exit')}
-            </button>
-          </div>
-        </nav>
+        <Header button />
         <div className="container h-100 my-4 overflow-hidden rounded shadow">
           <div className="row h-100 bg-white flex-md-row">
             <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
@@ -312,6 +165,7 @@ export const MainPage = () => {
                         aria-label={t('mainPage.newMessage')}
                         placeholder={t('mainPage.message')}
                         className="border-0 p-0 ps-2 form-control"
+                        autoFocus
                       />
                       <button type="submit" className="btn btn-group-vertical">
                         <svg
