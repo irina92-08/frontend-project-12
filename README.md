@@ -67,6 +67,7 @@ make start
 
 # Install dependencies
 make install
+```
 
 ## 🔌 API Integration
 

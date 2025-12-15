@@ -76,7 +76,7 @@ export const ModalAddRenameChannel = ({
             <Field autoFocus
               name="name"
               required
-              id={channelId}
+              id="name"
               className={cn('form-control mb-2', {
                 'is-invalid': errors.name && touched.name,
               })}
