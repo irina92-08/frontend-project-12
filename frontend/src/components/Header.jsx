@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-export const Header = ( {button} ) => {
+export const Header = ({ button }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { t } = useTranslation()
