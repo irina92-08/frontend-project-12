@@ -67,14 +67,15 @@ export const ModalAddRenameChannel = ({
       validateOnChange={true}
       validateOnBlur={true}
       validationSchema={channelSchema(t, channelId, dataChannels, statusModal)}
-      onSubmit={ (values, formikHelpers) => {
+      onSubmit={(values, formikHelpers) => {
         onSubmit(values, formikHelpers)
       }}
     >
       {({ isSubmitting, errors, touched, handleSubmit }) => (
         <Form onSubmit={handleSubmit}>
           <div>
-            <Field autoFocus
+            <Field
+              autoFocus
               name="name"
               required
               id="name"

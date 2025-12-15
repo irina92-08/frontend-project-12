@@ -32,7 +32,8 @@ export const FormLoging = () => {
         if (!token) {
           navigate('/login')
           setSubmitting(false)
-        } else {
+        }
+        else {
           dispatch(authActions.loginSuccess({ token }))
           dispatch(
             currentChatActions.setCurrentUserName(
@@ -86,7 +87,8 @@ export const FormLoging = () => {
                         {({ isSubmitting, values }) => (
                           <Form autoComplete="off">
                             <div className="form-floating mb-3">
-                              <Field autoFocus
+                              <Field
+                                autoFocus
                                 name="username"
                                 required=""
                                 placeholder={t('loging.username')}
